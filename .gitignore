@@ -21,3 +21,4 @@ qa/tmp/
 
 # Proefbouwen van de controlereeks
 .next-*
+.vercel

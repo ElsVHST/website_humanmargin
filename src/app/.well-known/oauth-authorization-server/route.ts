@@ -17,8 +17,10 @@ export function GET(request: Request) {
   return Response.json(
     {
       issuer: basis,
-      authorization_endpoint: `${basis}/api/oauth/authorize`,
-      token_endpoint: `${basis}/api/oauth/token`,
+      // Met de schuine streep erachter: deze site zet `trailingSlash` aan, en zonder die streep
+      // krijgt elke client eerst een omleiding voor zijn kiezen.
+      authorization_endpoint: `${basis}/api/oauth/authorize/`,
+      token_endpoint: `${basis}/api/oauth/token/`,
       response_types_supported: ["code"],
       grant_types_supported: ["authorization_code"],
       code_challenge_methods_supported: ["S256"],
