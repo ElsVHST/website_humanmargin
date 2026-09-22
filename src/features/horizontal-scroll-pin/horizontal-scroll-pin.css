@@ -1,0 +1,173 @@
+/**
+ * horizontal-scroll-pin.css
+ * Eigen attributen (data-scroll-pin-*), geen generieke klassennamen.
+ * Knoppen via CSS-variabelen: --scroll-pin-word-color / -hover / -active,
+ * --scroll-pin-seg-track / -fill, --scroll-pin-panel-gap.
+ *
+ * Progressive enhancement: de STANDAARD (zonder het attribuut hieronder) is
+ * op elke breedte een gewone, native horizontaal scrollbare rij met
+ * scroll-snap — bereikbaar met muis, trackpad, touch én toetsenbord, zonder
+ * dat er ooit JS heeft gedraaid. Pas zodra `horizontal-scroll-pin.js` zijn
+ * `init()` draait EN de viewport boven het breekpunt zit, zet de module het
+ * attribuut `data-scroll-pin-pinned` op `[data-scroll-pin]` — pas dán schakelt
+ * de CSS hieronder om naar de vastgezette (`position: sticky`) modus met de
+ * JS-aangestuurde `translateX`. Zonder dat attribuut (geen JS, JS nog niet
+ * geladen, of een uitzondering tijdens init) blijft paneel 2 en 3 dus gewoon
+ * bereikbaar via native scroll — nooit opgesloten achter `overflow: hidden`.
+ *
+ * Breekpunt: 52rem. Dit moet overeenkomen met de `breakpoint`-optie die aan
+ * init() wordt meegegeven (standaard ook 52rem) — zie README "Valkuilen".
+ */
+
+[data-scroll-pin] {
+	--scroll-pin-panels: 1; /* wordt door de JS overschreven met het echte aantal panelen */
+	--scroll-pin-vh-per-panel: 115vh;
+	position: relative;
+}
+
+/* --- Standaard (geen JS, of JS nog niet actief): native scroll-snap ----- */
+[data-scroll-pin-sticky] {
+	position: static;
+}
+
+[data-scroll-pin-nav] {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35em;
+	white-space: nowrap;
+}
+
+[data-scroll-pin-word] {
+	appearance: none;
+	background: none;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	color: var(--scroll-pin-word-color, rgb(17 16 16 / 0.16));
+	transition:
+		color 0.5s,
+		font-variation-settings 0.5s;
+}
+[data-scroll-pin-word]:hover {
+	color: var(--scroll-pin-word-hover, rgb(17 16 16 / 0.5));
+}
+[data-scroll-pin-word].is-active {
+	color: var(--scroll-pin-word-active, #111010);
+	font-weight: 700;
+}
+[data-scroll-pin-word]:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+	border-radius: 2px;
+}
+
+/* Track: standaard een gewone horizontale scrollcontainer met scroll-snap —
+   dit is de a11y-/no-JS-bodem, niet een "mobiele" bijzaak. */
+[data-scroll-pin-track] {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	overscroll-behavior-x: contain;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	gap: var(--scroll-pin-panel-gap, 1rem);
+}
+[data-scroll-pin-track]::-webkit-scrollbar {
+	display: none;
+}
+
+[data-scroll-pin-panel] {
+	flex: none;
+	width: 100%;
+	scroll-snap-align: start;
+	scroll-snap-stop: always;
+}
+/* Onder het breekpunt een kleine "peek" van het volgende paneel, zodat
+   duidelijk is dat er meer te scrollen valt (geldt zowel met als zonder
+   pin-modus, want pin-modus bestaat hieronder sowieso niet). */
+@media (max-width: 52rem) {
+	[data-scroll-pin-panel] {
+		flex: 0 0 86%;
+		width: 86%;
+	}
+}
+
+/* Segmentbalk heeft alleen betekenis in pin-modus (hij toont voortgang door
+   een scrub-animatie die zonder JS niet bestaat) — standaard verborgen. */
+[data-scroll-pin-seg] {
+	display: none;
+}
+
+/* --- Pin-modus: alléén als de module actief is EN de viewport breed genoeg
+   is. `[data-scroll-pin-pinned]` wordt uitsluitend door `init()` gezet
+   (nooit door CSS/markup) — zie horizontal-scroll-pin.js. ---------------- */
+@media (min-width: 52.0625rem) {
+	[data-scroll-pin][data-scroll-pin-pinned] {
+		height: calc(100vh + (var(--scroll-pin-panels) - 1) * var(--scroll-pin-vh-per-panel));
+	}
+
+	[data-scroll-pin][data-scroll-pin-pinned] [data-scroll-pin-sticky] {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	[data-scroll-pin][data-scroll-pin-pinned] [data-scroll-pin-track] {
+		position: absolute;
+		inset: 0;
+		height: 100%;
+		overflow: visible;
+		scroll-snap-type: none;
+		will-change: transform;
+		/* Geen tussenruimte in pin-modus: de JS schuift per paneel precies één
+		   viewportbreedte op. Met de gap van de scroll-rij (standaard 1rem) liep
+		   elk volgend paneel 16px verder uit (gevonden in de template, 22-09). */
+		gap: 0;
+	}
+
+	[data-scroll-pin][data-scroll-pin-pinned] [data-scroll-pin-panel] {
+		width: 100vw;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		scroll-snap-align: none;
+		/* Ruimte voor een zwevende koptekst/nav erboven en de segmentbalk
+		   eronder (zie hieronder). Een consument met een andere kopgrootte
+		   overschrijft deze twee regels gewoon met een eigen, specifiekere. */
+		padding-block: var(--scroll-pin-inline-offset, clamp(1.25rem, 4vh, 2.5rem))
+			calc(var(--scroll-pin-inline-offset, clamp(1.25rem, 4vh, 2.5rem)) + 1.5rem);
+		box-sizing: border-box;
+	}
+
+	[data-scroll-pin][data-scroll-pin-pinned] [data-scroll-pin-seg] {
+		display: flex;
+		position: absolute;
+		inset-inline: 0;
+		bottom: var(--scroll-pin-inline-offset, clamp(1.25rem, 4vh, 2.5rem));
+		z-index: 3;
+		padding-inline: var(--scroll-pin-inline-padding, clamp(1.25rem, 4vw, 2.5rem));
+		gap: 0.6rem;
+	}
+}
+
+[data-scroll-pin-seg] span {
+	position: relative;
+	flex: 1;
+	height: 2px;
+	overflow: hidden;
+	background: var(--scroll-pin-seg-track, rgb(17 16 16 / 0.12));
+}
+[data-scroll-pin-seg] i {
+	position: absolute;
+	inset: 0 auto 0 0;
+	display: block;
+	width: 0;
+	font-style: normal;
+	background: var(--scroll-pin-seg-fill, #111010);
+}

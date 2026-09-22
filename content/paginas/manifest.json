@@ -1,0 +1,110 @@
+{
+  "slug": "manifest",
+  "titel": "Manifest: welkom aan de margeschrijvers | Human Margin",
+  "beschrijving": "Niet anti-AI, wel anti-zombie en pro-mens. Het manifest van Human Margin over AI, vakmanschap en de mens die moet kunnen ingrijpen.",
+  "ogBeeld": "els-zebrapad-armen-gespreid",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "zwart",
+      "kicker": "Welkom.",
+      "kop": "Welkom aan de margeschrijvers.",
+      "beeld": "els-zebrapad-armen-gespreid",
+      "beeldFocus": "30% 50%"
+    },
+    {
+      "id": "voor-wie",
+      "type": "tekst",
+      "achtergrond": "zwart",
+      "bouwstenen": [
+        {
+          "type": "alinea",
+          "tekst": "Zij die lezen maar niet zomaar aannemen. Zij die denken, verbanden leggen. Zij die de dingen in twijfel trekken, niet alleen omdat het kan, maar omdat ze weten dat het moet. Zij die niet alleen denken, maar ook doen. Zij die doorhebben wat er op het spel staat."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Zij die voelen dat het anders moet en de ballen hebben om het anders te doen. Zij die verantwoordelijkheid dragen voor werk dat ze niet alleen doen. Zij die werken aan een organisatie waar mensen meedenken, tegenspreken, iets terugsturen wanneer het niet klopt."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Want de vraag is niet AI of geen AI. De vraag is waar wil je die AI? En belangrijker nog: waar wil je de mens? En welke mens?"
+        },
+        {
+          "type": "alinea",
+          "tekst": "Human Margin is niet voor wie blindelings AI-trends volgt zonder zich daar ongemakkelijk bij te voelen. Niet voor wie enkel wil optimaliseren en daar snelheid mee wil pakken. Niet voor bedrijven die AI als heilige graal zien. Maar voor wie nadenkt over wat dan wel optimaal zou zijn."
+        },
+        { "type": "alinea", "tekst": "En nee, ik ben niet anti-AI. Ik ben anti-zombie en pro-mens." }
+      ]
+    },
+    {
+      "id": "tipping-point",
+      "type": "tekst",
+      "achtergrond": "zwart",
+      "bouwstenen": [
+        {
+          "type": "alinea",
+          "tekst": "Want dit is het tipping point. De plot twist. Het stukje zwijgen tussen twee zinnen, de witregel tussen paragrafen. Hier moet het gebeuren."
+        },
+        {
+          "type": "alinea",
+          "tekst": "We zetten massaal in op AI. Wat dat kost staat in elke begroting. Dat je ondertussen ongemerkt afschrijft op een andere post staat nergens in je businessplan. Elk stuk werk dat naar een model gaat, is werk waarin niemand meer oefent. Je koopt snelheid en je betaalt in vakmanschap. Na een jaar draait het systeem beter en beoordeelt je organisatie minder."
+        },
+        {
+          "type": "alinea",
+          "tekst": "De wet vraagt intussen om een mens die kan ingrijpen. Iemand die controleert en overrulet. Over de vraag of die iemand het over twee jaar nog kan, zwijgt elk artikel."
+        }
+      ]
+    },
+    {
+      "id": "elf-keer-akkoord",
+      "type": "verhaal",
+      "achtergrond": "zwart",
+      "tekst": "Ergens in je organisatie werd vanmorgen elf keer op akkoord geklikt. Bij het eerste voorstel werd er meegelezen. Bij het elfde ging de klik sneller dan het lezen, want de tien ervoor klopten ook. Niemand deed iets fout. En toch is er iets veranderd."
+    },
+    {
+      "id": "de-mens-is-geen-fabriek",
+      "type": "tekst",
+      "achtergrond": "zwart",
+      "bouwstenen": [
+        {
+          "type": "alinea",
+          "tekst": "Er groeit een bedrijf dat op papier klopt maar in de praktijk alles gedachteloos afstempelt. Er groeit een situatie waarin het model meer van onze vaardigheden bevat dan wij er zelf nog hebben. Het archief van wat ons mens maakt, bewaard in een machine, terwijl wij het aan het verleren zijn."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Plots is het allemaal kwantiteit, geen kwaliteit. Plots ligt de focus op productiviteit. Maar de mens is geen fabriek."
+        },
+        {
+          "type": "alinea",
+          "tekst": "En een 30% efficiëntere variant van het verkeerde werk maakt het niet beter. Het maakt het sneller verkeerd."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Dit is voor wie te veel heeft opgebouwd en te lang aan vertrouwen heeft gewerkt, om het nu te breken met ondoordacht AI-gebruik. Want zij weten: klaar zijn voor de AI Act is meer dan een checklist. Het is klantvertrouwen. Het is transparantie. Het is een strategisch merkvoordeel. Het is een verzekering tegen het verlies van je menselijk kapitaal."
+        }
+      ]
+    },
+    {
+      "id": "daarom",
+      "type": "tekst",
+      "achtergrond": "zwart",
+      "bouwstenen": [
+        { "type": "kop", "tekst": "Daarom bestaat Human Margin.", "niveau": 2 },
+        { "type": "alinea", "tekst": "Zodat je weet wat je mag met AI. En wat je wil met AI." },
+        {
+          "type": "alinea",
+          "tekst": "Zodat je organisatie klaar is voor wat komt, met de aandacht bij de AI én bij de mens. Want allebei moeten ze getraind worden. Het verschil is dit: een model beantwoordt je vraag, een mens stelt hem."
+        },
+        { "type": "alinea", "tekst": "Dit is voor mensen die vragen stellen, verbanden leggen, in de marge schrijven." }
+      ]
+    },
+    {
+      "id": "slot",
+      "type": "slotzin",
+      "achtergrond": "zwart",
+      "regels": ["Nieuwsgierigheid is verzet.", "Blijf vragen."],
+      "kinetisch": true
+    }
+  ]
+}

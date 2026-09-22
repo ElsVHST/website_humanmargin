@@ -1,0 +1,77 @@
+/**
+ * hero-motion.css
+ * ------------------------------------------------------------------------
+ * Namespace: klassen `.hm-line` / `.hm-word` / `.hm-ch` / `.hm-ch--space`,
+ * attribuut `[data-hero-fade]`, CSS-variabele `--d` (per-element delay).
+ *
+ * De letter- en fade-animaties zijn pure CSS @keyframes: ze spelen zodra de
+ * elementen bestaan, met of zonder JS (relevant voor server-side gesplitste
+ * markup). De JS-module (`hero-motion.js`) is alleen verantwoordelijk voor
+ * het splitsen zelf en voor de scroll-gekoppelde "recede".
+ *
+ * Herkomst: techniek + easing-namen gezien op faresmasharawi.nl
+ * (22-09-2026), eigen implementatie.
+ */
+
+:root {
+  --hm-ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-hero-stage] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hm-line {
+  display: block;
+  overflow: hidden;
+  margin-bottom: -0.1em;
+  padding: 0.04em 0 0.1em;
+}
+
+.hm-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hm-ch {
+  display: inline-block;
+  will-change: transform;
+  animation: hm-ch-rise 0.9s var(--hm-ease-expo) both;
+  animation-delay: var(--d, 0s);
+}
+
+.hm-ch--space {
+  width: 0.22em;
+}
+
+@keyframes hm-ch-rise {
+  0% {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+[data-hero-fade] {
+  opacity: 0;
+  animation: 0.9s forwards hm-fade-in;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes hm-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-ch,
+  [data-hero-fade] {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}

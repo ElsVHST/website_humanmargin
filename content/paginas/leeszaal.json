@@ -1,0 +1,34 @@
+{
+  "slug": "leeszaal",
+  "titel": "De Leeszaal | Human Margin",
+  "beschrijving": "Wat ik lees, schrijf en wat me bezighoudt. Hier beslis ik wat je te zien krijgt, in plaats van een algoritme.",
+  "schakelaar": "leeszaal",
+  "ogBeeld": "els-lezend-graffitimuur",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "licht",
+      "kop": "De Leeszaal",
+      "lead": [
+        "Niet alles hoeft een post te zijn dat schreeuwt voor aandacht. Sommige dingen vragen om zitten in stilte, lezen en even blijven hangen."
+      ],
+      "beeld": "els-lezend-graffitimuur",
+      "beeldFocus": "55% 45%"
+    },
+    {
+      "id": "welkom",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "bouwstenen": [
+        { "type": "alinea", "tekst": "Welkom in mijn Leeszaal. Hier verzamel ik wat ik lees, schrijf en wat me bezighoudt." },
+        { "type": "alinea", "tekst": "Hier beslis ik wat je te zien krijgt, in plaats van een algoritme." },
+        {
+          "type": "alinea",
+          "tekst": "En kies jij wat je wil lezen, in plaats van clever geschreven marketing hooks die om je aandacht schreeuwen."
+        },
+        { "type": "alinea", "tekst": "Het is even wennen. Maar je kan het, ik geloof in jou." }
+      ]
+    }
+  ]
+}

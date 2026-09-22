@@ -1,0 +1,140 @@
+{
+  "slug": "over-mij",
+  "titel": "Over mij: Els Verheirstraeten | Human Margin",
+  "beschrijving": "Vragen stellen is bij mij geen techniek, het is een reflex. Hoe Els Verheirstraeten bij de AI Act terechtkwam en waar de naam Human Margin vandaan komt.",
+  "ogBeeld": "els-portret-graffitimuur",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "licht",
+      "kop": "Over mij",
+      "lead": [
+        "Ik ga je niet vertellen dat ik op een ochtend wakker werd met een missie. Er was geen burn-out. Geen openbaring. Geen moment waarop alles veranderde."
+      ],
+      "beeld": "els-portret-graffitimuur",
+      "beeldFocus": "50% 24%"
+    },
+    {
+      "id": "reflex",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "bouwstenen": [
+        {
+          "type": "alinea",
+          "tekst": "Er was wel altijd dit: ik kan dingen niet laten staan. Vragen stellen is bij mij geen techniek, het is een reflex. Rebel by nature, not by nurture."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Ik denk om de hoek, ik heb een fijne bullshit-filter en een bijna fysieke nood om te begrijpen hoe iets in elkaar zit. Geef mij een wormhole en ik spring."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Ik draag twee herinneringen op mijn huid. De ene vraagt: \"Wat is dit?\" De andere zegt: \"Denk eraan dat je doodgaat.\""
+        },
+        { "type": "foto", "beeld": "tatoeage-memento-mori" },
+        {
+          "type": "alinea",
+          "tekst": "Samen zijn ze mijn kompas. Blijf nieuwsgierig en verspil je tijd niet. Dat tweede maakt het eerste dringend. Als je maar één leven hebt, wil je het zelf meemaken. Niet half, niet afgeleid, niet met je aandacht ergens anders."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Ik hou waanzinnig veel van het leven en van mensen, en ik wil er zoveel mogelijk uithalen. Maar dan wel als mens, en niet door gedachteloos uit te besteden wat me juist mens maakt."
+        }
+      ],
+      "beeld": "els-zittend-muurschildering",
+      "beeldPositie": "rechts",
+      "beeldFocus": "50% 30%"
+    },
+    {
+      "id": "de-mens-in-de-marge",
+      "type": "tekst",
+      "achtergrond": "zwart",
+      "bouwstenen": [
+        { "type": "alinea", "tekst": "Zo kwam ik bij de AI Act terecht. Een klant bracht hem ter sprake tijdens een sparringsessie." },
+        {
+          "type": "alinea",
+          "tekst": "\"Dat vogel ik snel effe uit\", dacht ik. Dat \"snel\" werd maanden. Ik las de wet helemaal, sprak juristen, beleidsmakers en toezichthouders, en werd Certified AI Compliance Officer."
+        },
+        {
+          "type": "alinea",
+          "tekst": "En hoe dieper ik ging, hoe kwader ik werd. Alles gaat over wat AI mag en moet. Over de mens gaat het nauwelijks. Terwijl AI getraind is op ons, op wat mensen schreven en bedachten en beoordeelden. Hoe meer we het gebruiken, hoe minder we die dingen zelf nog oefenen."
+        },
+        {
+          "type": "alinea",
+          "tekst": "De wet lost dat op met een human-in-the-loop. Vertaal dat eens letterlijk. In the loop betekent op de hoogte. Keep me in the loop, houd me op de hoogte. Iemand die wordt bijgepraat."
+        },
+        { "type": "alinea", "tekst": "Daar geloof ik niet in." },
+        {
+          "type": "alinea",
+          "tekst": "Ik geloof in de mens in de marge. Iemand die meekijkt terwijl het gebeurt, vragen stelt, in de kantlijn schrijft wat er niet klopt. Dat is geen plek in een proces. Dat is een houding. Daar komt de naam vandaan."
+        }
+      ]
+    },
+    {
+      "id": "drie-manieren",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "bouwstenen": [
+        { "type": "kop", "tekst": "Dat doe ik nu op drie manieren.", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Ik help organisaties AI inzetten op een manier die verder gaat dan wat de wet vraagt, zodat mensen hun autonomie houden."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Ik ben sparringpartner voor bedrijven die weten dat betere vragen meer opleveren dan snelle antwoorden. Echt klankborden, geen gelijk krijgen. Een model stelt vragen omdat het daarop getraind is. Ik stel ze als het nodig is, omdat het nodig is en omdat ik simpelweg niet anders kan."
+        },
+        {
+          "type": "alinea",
+          "tekst": "En ik schrijf. Omdat schrijven denken is. En omdat je denken, zeker wanneer je AI gebruikt, moet blijven oefenen."
+        }
+      ]
+    },
+    {
+      "id": "slot",
+      "type": "slotzin",
+      "achtergrond": "licht",
+      "regels": ["Voor autonomie. Voor begrip. Voor de mens.", "Maak van je nieuwsgierigheid je verzet.", "Blijf vragen."]
+    },
+    {
+      "id": "waarom-ik",
+      "type": "punten",
+      "achtergrond": "grijs",
+      "kop": "Waarom ik en niet een ander?",
+      "items": [
+        {
+          "nadruk": "Geen checklists en risico-tabellen.",
+          "tekst": "Ik gebruik compliance als poort naar een breder gesprek: over wat AI met werk doet, met jouw merk, de merkbeleving, met medewerkers. Compliance is het startpunt."
+        },
+        {
+          "nadruk": "De wet vraagt om een human-in-the-loop.",
+          "tekst": "Iemand die kan controleren en overrulen. Of die iemand het over twee jaar nog kan, staat in geen enkel artikel en wordt nergens geborgd. Wie is die human in the loop en hoe zorgen we ervoor dat die meer doet dan enkel hersenloos afstempelen van wat AI aandraagt?"
+        },
+        {
+          "nadruk": "Niet gemaakt door juristen.",
+          "tekst": "Onleesbaarheid is een verdienmodel en documenten verdwijnen in een la. Om echt samen te werken met AI is gedragsverandering nodig."
+        },
+        {
+          "nadruk": "Het ziet er niet uit als een compliance bureau, omdat ik niet werk als een compliance bureau.",
+          "tekst": "Het AI-tijdperk vraagt geen passieve compliance-volgers, het vraagt mensen die nadenken over wat ze doen en die hun stem niet outsourcen. Hoe Human Margin eruitziet is geen marketing-stijl. Het is consequent. De vorm volgt de boodschap."
+        },
+        {
+          "nadruk": "CAICO met een AIGP opleiding en 20 jaar ondernemerservaring.",
+          "tekst": "Maar vooral met een zeer fijne BS filter, een goede portie gezond verstand en een heldere toekomstvisie."
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "achtergrond": "geel",
+      "kop": "Contact",
+      "tekst": [
+        "Heb je een vermoeden dat het niet geregeld is, of heb je een heel plan en wil je even sparren? Dat en alles ertussen kan ook."
+      ],
+      "knop": { "tekst": "Plan een kennismaking", "doel": "kennismaking" },
+      "subkop": "Liever eerst even schrijven of bellen?"
+    }
+  ]
+}

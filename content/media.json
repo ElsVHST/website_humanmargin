@@ -1,0 +1,100 @@
+{
+  "beelden": [
+    {
+      "id": "els-zebrapad-van-boven",
+      "bestand": "/media/els-zebrapad-van-boven.jpg",
+      "alt": "Els staat op een zebrapad en kijkt omhoog naar de camera, van bovenaf gefotografeerd",
+      "breedte": 1598,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "els-profiel-muurschildering",
+      "bestand": "/media/els-profiel-muurschildering.jpg",
+      "alt": "Els in profiel, met een zwart-witte muurschildering op de achtergrond",
+      "breedte": 1599,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "els-liggend-paw-the-power",
+      "bestand": "/media/els-liggend-paw-the-power.jpg",
+      "alt": "Els ligt met gespreide armen op een muurschildering met de woorden Paw the power",
+      "breedte": 1598,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "els-portret-graffitimuur",
+      "bestand": "/media/els-portret-graffitimuur.jpg",
+      "alt": "Els staat met de handen in de zakken voor een graffitimuur en kijkt opzij",
+      "breedte": 1598,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "els-lachend-op-de-trap",
+      "bestand": "/media/els-lachend-op-de-trap.jpg",
+      "alt": "Els zit lachend op een metalen trap in de zon",
+      "breedte": 2400,
+      "hoogte": 1599,
+      "soort": "foto"
+    },
+    {
+      "id": "trap-van-boven",
+      "bestand": "/media/trap-van-boven.jpg",
+      "alt": "Een metalen trap van bovenaf gezien, onderaan staat Els op straat en kijkt omhoog",
+      "breedte": 2400,
+      "hoogte": 1598,
+      "soort": "foto"
+    },
+    {
+      "id": "els-zittend-muurschildering",
+      "bestand": "/media/els-zittend-muurschildering.jpg",
+      "alt": "Els zit voorovergebogen op een muurschildering en kijkt recht in de lens",
+      "breedte": 1599,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "els-zebrapad-armen-gespreid",
+      "bestand": "/media/els-zebrapad-armen-gespreid.jpg",
+      "alt": "Els loopt met gespreide armen over een zebrapad, van achteren gefotografeerd",
+      "breedte": 2400,
+      "hoogte": 1599,
+      "soort": "foto"
+    },
+    {
+      "id": "els-hand-voor-de-ogen",
+      "bestand": "/media/els-hand-voor-de-ogen.jpg",
+      "alt": "Els zit op een metalen trap en houdt een hand voor de ogen",
+      "breedte": 2400,
+      "hoogte": 1598,
+      "soort": "foto"
+    },
+    {
+      "id": "els-lezend-graffitimuur",
+      "bestand": "/media/els-lezend-graffitimuur.jpg",
+      "alt": "Els leest een boek voor een graffitimuur",
+      "breedte": 1598,
+      "hoogte": 2400,
+      "soort": "foto"
+    },
+    {
+      "id": "ai-act-met-markeerstift",
+      "bestand": "/media/ai-act-met-markeerstift.jpg",
+      "alt": "Pagina's uit de AI Act met gele markeerstift en blauwe aantekeningen in de kantlijn",
+      "breedte": 404,
+      "hoogte": 509,
+      "soort": "inzet"
+    },
+    {
+      "id": "tatoeage-memento-mori",
+      "bestand": "/media/tatoeage-memento-mori.jpg",
+      "alt": "Close-up van een tatoeage met de woorden Memento Mori",
+      "breedte": 334,
+      "hoogte": 504,
+      "soort": "inzet"
+    }
+  ]
+}

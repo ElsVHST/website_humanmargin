@@ -1,0 +1,74 @@
+{
+  "slug": "privacy",
+  "titel": "Privacyverklaring | Human Margin",
+  "beschrijving": "Welke gegevens Human Margin verwerkt als je deze site bezoekt, een kennismaking plant of mailt, en wat je rechten daarbij zijn.",
+  "ogBeeld": "els-lezend-graffitimuur",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "licht",
+      "kicker": "Concept, ter controle door Els",
+      "kop": "Privacyverklaring",
+      "lead": [
+        "Hier lees je welke gegevens Human Margin verwerkt als je deze site bezoekt of contact opneemt, en waarom."
+      ],
+      "beeld": "els-lezend-graffitimuur",
+      "beeldFocus": "55% 45%"
+    },
+    {
+      "id": "verklaring",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "bouwstenen": [
+        { "type": "kop", "tekst": "Wie verantwoordelijk is", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Human Margin is de handelsnaam van Sparrow Misc. Human Margin (Sparrow Misc) is verantwoordelijk voor wat er met gegevens via deze site gebeurt. De adresgegevens staan onderaan deze pagina."
+        },
+        { "type": "kop", "tekst": "Als je de site bezoekt", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "De site draait bij Vercel. Om de site veilig en bereikbaar te houden, legt Vercel technische gegevens vast, zoals je IP-adres en het tijdstip van je bezoek. Die gegevens gebruik ik niet om je te volgen."
+        },
+        { "type": "kop", "tekst": "Statistiek", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Als de site statistiek bijhoudt, gebeurt dat met Google Analytics 4, en alleen nadat je op Accepteren klikt. Zonder die klik laadt Google Analytics niet en komen er geen cookies van Google op je toestel. Google Analytics meet welke pagina's je bekijkt en op welke knoppen je klikt. De bewaartermijn volgt uit de instellingen van Google Analytics en moet nog bevestigd worden."
+        },
+        {
+          "type": "alinea",
+          "tekst": "Je keuze kun je altijd wijzigen via Cookie-instellingen onderaan elke pagina."
+        },
+        { "type": "kop", "tekst": "Een kennismaking plannen", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Een kennismaking plan je bij Calendly, een aparte dienst. Calendly verwerkt je naam, je e-mailadres en het tijdstip dat je kiest. Daarvoor geldt het privacybeleid van Calendly."
+        },
+        { "type": "kop", "tekst": "Mailen en bellen", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Mail of bel je, dan gebruik ik je gegevens alleen om je vraag te beantwoorden en om het gesprek dat daaruit volgt voor te bereiden."
+        },
+        { "type": "kop", "tekst": "Cookies", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Deze site plaatst zelf geen cookies. Je keuze voor of tegen statistiek wordt alleen in je eigen browser bewaard."
+        },
+        { "type": "kop", "tekst": "Je rechten", "niveau": 2 },
+        {
+          "type": "alinea",
+          "tekst": "Je mag altijd vragen welke gegevens ik van je heb, en ze laten aanpassen of verwijderen. Ben je het niet eens met hoe er met je gegevens wordt omgegaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens."
+        }
+      ]
+    },
+    {
+      "id": "vragen",
+      "type": "contact",
+      "achtergrond": "grijs",
+      "kop": "Vragen over privacy",
+      "knop": { "tekst": "Stuur een mail", "doel": "mail" },
+      "toonBedrijfsgegevens": true
+    }
+  ]
+}

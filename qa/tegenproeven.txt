@@ -1,0 +1,48 @@
+Tegenproeven — elke controle is één keer expres rood gemaakt.
+Een controle die nooit rood kan worden, controleert niets.
+
+Gedraaid op 2026-09-22 met: node qa/tegenproef.mjs
+✓ content-check
+   stuk gemaakt: de titel weghalen uit content/paginas/home.json
+   exit 1
+   melding: content-check: FAIL (1)
+
+✓ herkomst
+   stuk gemaakt: een zin op de homepage zetten die niet van Els is
+   exit 1
+   melding: herkomst: FAIL (0/1)
+
+✓ kleuren
+   stuk gemaakt: een zesde kleur in de stijl zetten (#ff0000 op elke sectie)
+   exit 1
+   melding: kleuren: FAIL — 401 vreemde kleurwaarden
+
+✓ contrast-axe
+   stuk gemaakt: de lopende tekst lichtgrijs maken op een lichte achtergrond
+   exit 1
+   melding: FAIL AC-A1 axe-core / — verse stand, vóór scrollen — color-contrast (2×): .tekst--groot > p
+
+✓ licentie
+   stuk gemaakt: het licentieblok uit de CSS van Feisty halen
+   exit 1
+   melding: licentie: FAIL
+
+✓ check-bundel
+   stuk gemaakt: bouwen mét meet-ID, terwijl de controle uitgaat van een bouw zonder
+   exit 1
+   melding: check-bundel: FAIL
+
+✓ cookie-test
+   stuk gemaakt: Google Analytics laten laden vóór de bezoeker gekozen heeft
+   exit 1
+   melding: FAIL AC-T8 vóór een keuze is document.cookie leeg en gaat er niets naar Google — cookie "" · 1 verzoeken
+
+✓ knop-test
+   stuk gemaakt: de kwaststreep van de knop weer mét verhouding laten inpassen
+   exit 1
+   melding: FAIL de tekst van elke knop ligt volledig op de kwaststreep — 21 knoppen bekeken · / 1440px "Plan een kennismaking": inkt 43–239, tekst 24–225 | / 1440px "Plan een kennismaking": inkt 60–281, tekst 28–264 | /aanbod/ 1440
+
+✓ links
+   stuk gemaakt: een knop naar een pagina die niet bestaat
+   exit 1
+   melding: links: FAIL

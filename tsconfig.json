@@ -1,0 +1,74 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts",
+    ".next-contract/types/**/*.ts",
+    ".next-contract/dev/types/**/*.ts",
+    ".next-ga/types/**/*.ts",
+    ".next-ga/dev/types/**/*.ts",
+    ".next-tegen-herkomst/types/**/*.ts",
+    ".next-tegen-herkomst/dev/types/**/*.ts",
+    ".next-tegen-kleuren/types/**/*.ts",
+    ".next-tegen-kleuren/dev/types/**/*.ts",
+    ".next-tegen-contrast-axe/types/**/*.ts",
+    ".next-tegen-contrast-axe/dev/types/**/*.ts",
+    ".next-tegen-licentie/types/**/*.ts",
+    ".next-tegen-licentie/dev/types/**/*.ts",
+    ".next-tegen-check-bundel/types/**/*.ts",
+    ".next-tegen-check-bundel/dev/types/**/*.ts",
+    ".next-tegen-cookie-test/types/**/*.ts",
+    ".next-tegen-cookie-test/dev/types/**/*.ts",
+    ".next-tegen-links/types/**/*.ts",
+    ".next-tegen-links/dev/types/**/*.ts",
+    ".next-tegen-knop-test/types/**/*.ts",
+    ".next-tegen-knop-test/dev/types/**/*.ts",
+    ".next-k1/types/**/*.ts",
+    ".next-k1/dev/types/**/*.ts",
+    ".next-dev/types/**/*.ts",
+    ".next-dev/dev/types/**/*.ts",
+    ".next-vb-eerste-versie/types/**/*.ts",
+    ".next-vb-eerste-versie/dev/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-proef-controlereeks/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-proef-controlereeks/dev/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-proef-script/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-proef-script/dev/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-manifest/types/**/*.ts",
+    ".next-vb-voorstel-2026-09-22-manifest/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

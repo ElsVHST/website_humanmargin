@@ -1,0 +1,69 @@
+/**
+ * reveal-on-scroll.css
+ * ------------------------------------------------------------------------
+ * Namespace: attribuut `data-ros-active` (gezet door de JS-module op de
+ * root), attribuut `[data-reveal]`/`[data-reveal="left|right"]` op de te
+ * onthullen elementen, klasse `.is-in` zodra ze in beeld zijn geweest.
+ *
+ * Zonder `data-ros-active` op de root (module niet geladen / JS uit) is er
+ * geen enkele regel hieronder van toepassing: elementen tonen gewoon hun
+ * standaard opacity/transform. Dat IS de `.js`-gating — hier gescoped per
+ * instantie in plaats van globaal op <html>, zodat de module herbruikbaar
+ * is zonder gedeelde state (zie README).
+ *
+ * Herkomst: drempelwaarden gezien op faresmasharawi.nl (22-09-2026, CSS
+ * `.js [data-reveal]`), eigen implementatie.
+ */
+
+/*
+ * Twee fasen, met opzet gescheiden — anders animeert het VERBERGEN zelf mee
+ * (een "reveal in omgekeerde richting" flitst voorbij op het moment dat de
+ * module opstart, omdat de browser opacity 1 -> 0 als een echte
+ * waardewijziging ziet zodra er op dat moment al een transition actief is).
+ * `data-ros-hidden` zet de verborgen staat synchroon, zonder transition.
+ * `data-ros-active` (een frame later gezet door de JS-module) schakelt
+ * alleen de transition in — dat verandert geen waarde, dus animeert niets.
+ * Pas de daadwerkelijke `.is-in`-wissel (door de IntersectionObserver)
+ * animeert, en dan mét transition.
+ */
+[data-ros-hidden] [data-reveal] {
+  --ros-duration: 0.95s;
+  --ros-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ros-up: 2.75rem;
+  --ros-side-x: 5.5rem;
+  --ros-side-y: 3.25rem;
+
+  opacity: 0;
+  transform: translateY(var(--ros-up));
+  will-change: opacity, transform;
+}
+
+[data-ros-hidden] [data-reveal='left'] {
+  transform: translate(calc(-1 * var(--ros-side-x)), var(--ros-side-y));
+}
+
+[data-ros-hidden] [data-reveal='right'] {
+  transform: translate(var(--ros-side-x), var(--ros-side-y));
+}
+
+[data-ros-active] [data-reveal] {
+  transition: opacity var(--ros-duration, 0.95s) var(--ros-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform var(--ros-duration, 0.95s) var(--ros-ease, cubic-bezier(0.22, 1, 0.36, 1));
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+[data-ros-hidden] [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduced-motion: de JS-module voegt is-in meteen toe en slaat de observer
+   over, maar deze regel is het vangnet als de opacity-regel hierboven al
+   door de browser is toegepast vóór de eerste rAF/paint. */
+@media (prefers-reduced-motion: reduce) {
+  [data-ros-hidden] [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

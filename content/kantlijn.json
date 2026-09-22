@@ -1,0 +1,68 @@
+{
+  "notities": [
+    {
+      "pagina": "home",
+      "sectie": "opening",
+      "tekst": "Wat wil je?",
+      "kleur": "blauw",
+      "pijl": "pijl-notitie",
+      "plek": "foto"
+    },
+    {
+      "pagina": "home",
+      "sectie": "hoe-ik-werk",
+      "tekst": "HOE DAN??",
+      "kleur": "geel"
+    },
+    {
+      "pagina": "home",
+      "sectie": "waarom-human-margin",
+      "tekst": "MEER WETEN",
+      "kleur": "geel",
+      "pijl": "pijl-gebogen"
+    },
+    {
+      "pagina": "home",
+      "sectie": "voordat-we-beginnen",
+      "tekst": "Blijf vragen.",
+      "kleur": "blauw"
+    },
+    {
+      "pagina": "over-mij",
+      "sectie": "slot",
+      "tekst": "Nieuwsgierigheid is verzet.",
+      "kleur": "blauw"
+    },
+    {
+      "pagina": "privacy",
+      "sectie": "opening",
+      "tekst": "Lees!",
+      "kleur": "blauw",
+      "plek": "kantlijn"
+    }
+  ],
+  "markeringen": [
+    {
+      "pagina": "home",
+      "sectie": "waarom-nu",
+      "tekst": "Je koopt snelheid en je betaalt in vakmanschap."
+    },
+    {
+      "pagina": "home",
+      "sectie": "zeven-vragen",
+      "tekst": "En kan die mens het over twee jaar nog zonder AI?"
+    },
+    {
+      "pagina": "over-mij",
+      "sectie": "reflex",
+      "tekst": "Rebel by nature, not by nurture.",
+      "omcirkeld": true
+    },
+    {
+      "pagina": "manifest",
+      "sectie": "de-mens-is-geen-fabriek",
+      "tekst": "productiviteit",
+      "stijl": "doorhaling"
+    }
+  ]
+}

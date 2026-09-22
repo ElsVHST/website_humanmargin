@@ -1,0 +1,23 @@
+node_modules/
+.next/
+out/
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Geheimen horen nooit in deze openbare repo. Alleen het voorbeeld zonder waarden gaat mee.
+.env*
+!.env.example
+*.pem
+
+# Lokale meetresultaten van de controlereeks (screenshots, Lighthouse-JSON, tijdelijke builds).
+# De scripts zelf en de tegenproeven gaan wél mee.
+qa/uitvoer/
+qa/doorloop/
+qa/lighthouse/
+qa/tmp/
+.vercel/
+
+# Proefbouwen van de controlereeks
+.next-*

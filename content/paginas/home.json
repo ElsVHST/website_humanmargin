@@ -1,0 +1,193 @@
+{
+  "slug": "home",
+  "titel": "Human Margin | AI in je organisatie, met de mens erbij",
+  "beschrijving": "De wet vraagt om een mens die kan ingrijpen. Human Margin zorgt dat die mens dat over twee jaar nog kan: nulmeting, regietraject en academie.",
+  "ogBeeld": "els-zebrapad-van-boven",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "zwart",
+      "logo": true,
+      "kop": "De mens in de marge",
+      "lead": [
+        "De wet vraagt om een mens die kan ingrijpen. Over de vraag of die mens het over twee jaar nog kan, wordt niets gezegd. Daar begint mijn werk."
+      ],
+      "knoppen": [
+        { "tekst": "Plan een kennismaking", "doel": "kennismaking" },
+        { "tekst": "Bekijk het aanbod", "doel": "/aanbod/" }
+      ],
+      "beeld": "els-zebrapad-van-boven",
+      "beeldFocus": "50% 38%"
+    },
+    {
+      "id": "waarom-nu",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "kop": "Waarom nu",
+      "bouwstenen": [
+        {
+          "type": "alinea",
+          "tekst": "Je investeert in AI. Dat bedrag staat in je begroting, met een verwachte opbrengst erbij. Wat die versnelling meeneemt staat nergens. Elk stuk werk dat naar een model gaat, is werk waarin niemand meer oefent. Je koopt snelheid en je betaalt in vakmanschap."
+        }
+      ]
+    },
+    {
+      "id": "zeven-vragen",
+      "type": "vragenlijst",
+      "achtergrond": "grijs",
+      "label": "01 De situatie",
+      "kop": "AI wordt al gebruikt. Maar is het ook geregeld?",
+      "subkop": "Zeven vragen",
+      "intro": "Misschien gebruiken medewerkers ChatGPT of Copilot. Dan ontstaan al snel vragen als:",
+      "vragen": [
+        "Welke toepassingen gebruiken we precies?",
+        "Welke gegevens mogen medewerkers invoeren?",
+        "Wie mag een nieuwe tool goedkeuren?",
+        "Wanneer moet een mens een uitkomst controleren?",
+        "Wie is verantwoordelijk als AI een fout maakt?",
+        "Zijn we klaar voor de AI Act?",
+        "En kan die mens het over twee jaar nog zonder AI?"
+      ],
+      "slot": "Zonder duidelijke antwoorden ontstaan willekeur, verborgen gebruik en onnodige risico's."
+    },
+    {
+      "id": "hoe-ik-werk",
+      "type": "panelen",
+      "achtergrond": "zwart",
+      "kop": "Hoe ik werk",
+      "panelen": [
+        { "woord": "Meten", "titel": "Nulmeting", "tekst": "Waar staan we, en wat beoordelen mensen nog zelf?" },
+        { "woord": "Inrichten", "titel": "Regietraject", "tekst": "Welke keuzes, grenzen en rollen leggen we vast?" },
+        { "woord": "Op peil houden", "titel": "Academie", "tekst": "Hoe blijft het vermogen om in te grijpen bestaan?" }
+      ],
+      "naschrift": [
+        { "type": "alinea", "tekst": "Elk traject begint bij wat er al gebeurt." },
+        {
+          "type": "alinea",
+          "tekst": "Ik neem geen werk aan dat ik niet kan waarmaken. Waar juridische, privacy- of technische beoordeling nodig is, zeg ik dat en betrek ik de juiste mensen."
+        },
+        { "type": "knop", "tekst": "Bekijk het aanbod", "doel": "/aanbod/" }
+      ]
+    },
+    {
+      "id": "hoe-ik-denk",
+      "type": "tekst",
+      "achtergrond": "licht",
+      "kop": "Hoe ik denk",
+      "bouwstenen": [
+        {
+          "type": "citaat",
+          "tekst": "Het moeilijkste aan AI invoeren is niet de techniek. Het is bepalen wat je bewust bij mensen laat."
+        }
+      ],
+      "beeld": "els-profiel-muurschildering",
+      "beeldPositie": "rechts",
+      "beeldFocus": "60% 30%"
+    },
+    {
+      "id": "voor-wie",
+      "type": "punten",
+      "achtergrond": "grijs",
+      "kop": "People over sheeple",
+      "items": [
+        {
+          "nadruk": "Wie we bedienen:",
+          "tekst": "Toekomstgerichte bedrijven. Zij die verder zien dan de hype. Zij die door hebben dat co-creatie met AI wil zeggen dat je in zowel AI als de mens moet investeren. Leiders die verder gaan dan wetgeving en beseffen dat compliance een bijproduct is van goed leiderschap."
+        },
+        {
+          "nadruk": "Wat hen onderscheidt:",
+          "tekst": "Lange termijn visie. Geen snel gewin, maar bereid om wat langzamer na te denken in een snelle wereld. Liefde voor de mens en menselijkheid. En besef dat de mens geen fabriek is."
+        },
+        {
+          "nadruk": "Hoe we ze bedienen:",
+          "tekst": "Begrijpelijk vóór compliant. Bewust vóór snel. Eigen denken vóór geleende meningen."
+        }
+      ]
+    },
+    {
+      "id": "waarom-human-margin",
+      "type": "verwijzingen",
+      "achtergrond": "zwart",
+      "kop": "Waarom Human Margin",
+      "blokken": [
+        {
+          "titel": "Manifest",
+          "tekst": ["Welkom aan de margeschrijvers.", "Zij die lezen maar niet zomaar aannemen."],
+          "beeld": "els-liggend-paw-the-power",
+          "beeldFocus": "50% 70%",
+          "knop": { "tekst": "Lees het manifest", "doel": "/manifest/" }
+        },
+        {
+          "titel": "Over mij",
+          "tekst": ["Ik ga je niet vertellen dat ik op een ochtend wakker werd met een missie."],
+          "beeld": "els-portret-graffitimuur",
+          "beeldFocus": "50% 22%",
+          "knop": { "tekst": "Lees mijn verhaal", "doel": "/over-mij/" }
+        }
+      ]
+    },
+    {
+      "id": "klanten",
+      "type": "klanten",
+      "achtergrond": "licht",
+      "kop": "Klanten"
+    },
+    {
+      "id": "voordat-we-beginnen",
+      "type": "faq",
+      "achtergrond": "grijs",
+      "kop": "Voordat we beginnen",
+      "vragen": [
+        {
+          "vraag": "Voor welke organisaties is dit bedoeld?",
+          "antwoord": [
+            "Voor organisaties waar AI al wordt gebruikt of binnenkort wordt ingevoerd, en waar meerdere mensen ermee werken. Vaak zonder eigen juridische afdeling, waar de vraag wie beslist en wie verantwoordelijk is nog niet is beantwoord."
+          ]
+        },
+        {
+          "vraag": "We gebruiken alleen ChatGPT. Is dit dan nodig?",
+          "antwoord": [
+            "Ook dan spelen de vragen hierboven. Welke gegevens gaan erin, wie controleert wat eruit komt, en wat gebeurt er als een medewerker morgen een tweede tool in gebruik neemt? De nulmeting bepaalt hoe groot het vraagstuk werkelijk is."
+          ]
+        },
+        {
+          "vraag": "We hebben al AI-beleid. Is dit dan nog nodig?",
+          "antwoord": [
+            "Dat hangt af van wat dat beleid in de praktijk doet. Veel organisaties hebben iets laten opstellen dat op papier klopt, terwijl er in het dagelijkse werk niets veranderde. De nulmeting laat zien of mensen het kennen, of ze ernaar handelen en waar het schuurt."
+          ]
+        },
+        {
+          "vraag": "Zijn jullie tegen AI?",
+          "antwoord": [
+            "Integendeel. Ik werk er dagelijks mee en ik help organisaties het verder in te voeren. Alleen kun je harder automatiseren naarmate je beter weet wat je wil beschermen. Wie alleen op de techniek let, merkt na een jaar dat het systeem beter draait en de organisatie minder goed beoordeelt. Daar wordt niemand sneller van."
+          ]
+        },
+        {
+          "vraag": "Is Human Margin een juridisch kantoor?",
+          "antwoord": [
+            "Nee. Ik ben geen jurist en dit is geen advocatenkantoor. Ik las de wet helemaal, sprak juristen, beleidsmakers en toezichthouders, en werd Certified AI Compliance Officer. Het verschil zit in wat erna komt. Een jurist levert een document dat juridisch klopt. Ik kom binnen, praat met de mensen die het werk doen, en blijf erbij tot de afspraken ook echt in de praktijk landen. Waar een juridisch oordeel nodig is, zeg ik dat en haal ik er een jurist bij."
+          ]
+        },
+        {
+          "vraag": "Bouw je ook AI-systemen?",
+          "antwoord": [
+            "Nee. Human Margin bouwt of implementeert geen technische AI-systemen. Mijn werk is organisatorische analyse, beleid, governance, training en menselijke regie."
+          ]
+        }
+      ],
+      "knop": { "tekst": "Stel je vraag", "doel": "keuzehulp" }
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "achtergrond": "geel",
+      "kop": "Contact",
+      "tekst": [
+        "Heb je een vermoeden dat het niet geregeld is, of heb je een heel plan en wil je even sparren? Dat en alles ertussen kan ook."
+      ],
+      "knop": { "tekst": "Plan een kennismaking", "doel": "kennismaking" },
+      "subkop": "Liever eerst even schrijven of bellen?"
+    }
+  ]
+}

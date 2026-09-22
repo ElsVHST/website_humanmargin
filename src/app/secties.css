@@ -1,0 +1,787 @@
+/*
+ * Opmaak per sectietype. Elke sectie leest --vlak/--inkt uit data-achtergrond (globals.css).
+ * Off-center composities en harde vlakken (dia 9, dia 10). Geen schaduwen, geen verlopen.
+ */
+
+/* ── Opening ───────────────────────────────────────────────────────────────────────────── */
+
+.opening {
+  padding-top: calc(var(--kop-h) + clamp(1.25rem, 0.5rem + 3vw, 3rem));
+  padding-bottom: clamp(3rem, 2rem + 4vw, 6rem);
+  overflow: hidden;
+}
+.opening__raster {
+  display: grid;
+  gap: 1.5rem;
+}
+.opening__logo {
+  display: block;
+  width: min(17rem, 62vw);
+  height: auto;
+  margin-bottom: 1.25rem;
+}
+.opening__kicker {
+  display: block;
+  margin-bottom: 0.9rem;
+}
+.opening__knoppen {
+  margin-top: 1.5rem;
+}
+.opening__lead {
+  max-width: 34rem;
+}
+.opening__lead p + p {
+  margin-top: 0.8em;
+}
+.opening__foto {
+  position: relative;
+  margin-inline: calc(-1 * var(--goot));
+  height: min(62svh, 34rem);
+}
+.opening__foto .foto {
+  position: absolute;
+  inset: 0;
+}
+.opening__notitie {
+  position: absolute;
+  z-index: 2;
+  top: 9%;
+  right: 8%;
+}
+.opening__notitie .notitie {
+  flex-direction: row-reverse;
+  align-items: flex-end;
+}
+.opening__notitie .notitie__pijl {
+  transform: translateY(1.2rem);
+}
+.opening__kantlijn {
+  margin-top: 1.5rem;
+}
+.opening__kwast {
+  display: none;
+}
+@media (min-width: 52rem) {
+  .opening {
+    min-height: min(100svh, 62rem);
+    display: flex;
+    align-items: stretch;
+  }
+  .opening > .wrap {
+    display: flex;
+  }
+  .opening__raster {
+    flex: 1;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas: "tekst foto";
+    column-gap: clamp(2rem, 1rem + 3vw, 4.5rem);
+    align-items: stretch;
+  }
+  .opening__tekst {
+    grid-area: tekst;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 2rem;
+  }
+  .opening__foto {
+    grid-area: foto;
+    margin-inline: 0 calc(-1 * var(--goot));
+    height: auto;
+    min-height: 32rem;
+    margin-block: calc(-1 * clamp(1.25rem, 0.5rem + 3vw, 3rem)) calc(-1 * clamp(3rem, 2rem + 4vw, 6rem));
+  }
+  .opening__kwast {
+    display: block;
+    position: absolute;
+    left: -1.6rem;
+    top: 14%;
+    width: 2.6rem;
+    height: auto;
+    z-index: 2;
+  }
+}
+@media (max-width: 51.99rem) {
+  /* Op mobiel: kop en knoppen boven, dan de foto groot in beeld, dan de lead. */
+  .opening__tekst {
+    display: contents;
+  }
+  .opening__raster > * {
+    min-width: 0;
+  }
+  .opening__koppen {
+    order: 1;
+  }
+  .opening__knoppen {
+    order: 2;
+    margin-top: 0;
+  }
+  .opening__foto {
+    order: 3;
+  }
+  .opening__lead {
+    order: 4;
+  }
+}
+
+/* ── Vragenlijst ("Zeven vragen") ──────────────────────────────────────────────────────── */
+
+.vragen {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 0.2rem solid currentColor;
+}
+.vragen li {
+  display: grid;
+  grid-template-columns: 3.4rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding-block: 1.05rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--zwart) 30%, transparent);
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+.vragen__nr {
+  font-family: var(--font-kop);
+  font-size: 1.05rem;
+}
+.vragenlijst__raster .kop-2 {
+  font-size: min(clamp(2rem, 1.2rem + 2.3vw, 3.3rem), calc((100vw - 2 * var(--goot)) / (var(--langste-woord, 10) * 0.84)));
+}
+@media (min-width: 64rem) {
+  .vragenlijst__raster {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 4rem;
+    align-items: start;
+  }
+  .vragen {
+    margin-top: 0;
+  }
+}
+.vragenlijst__slot {
+  margin-top: 2rem;
+  max-width: var(--tekstbreedte);
+  font-weight: 600;
+}
+
+/* ── Panelen ("Hoe ik werk", horizontal-scroll-pin) ─────────────────────────────────────── */
+
+.panelen {
+  /* 42 % wit op zwart haalt 3,8 : 1 — te weinig voor tekst. 66 % haalt 6,4 : 1 (axe, 22-09). */
+  --scroll-pin-word-color: color-mix(in srgb, var(--wit) 66%, transparent);
+  --scroll-pin-word-hover: color-mix(in srgb, var(--wit) 85%, transparent);
+  --scroll-pin-word-active: var(--geel);
+  --scroll-pin-seg-track: color-mix(in srgb, var(--wit) 22%, transparent);
+  --scroll-pin-seg-fill: var(--geel);
+  padding-block: 0;
+}
+.panelen__kopregel {
+  padding-top: clamp(4rem, 3rem + 5vw, 7rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+.panelen [data-scroll-pin-nav] {
+  gap: 0.2rem 1.4rem;
+}
+.panelen [data-scroll-pin-word] {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(0.95rem, 0.8rem + 0.5vw, 1.2rem);
+  min-height: 2.75rem;
+  font-weight: 400;
+}
+.panelen [data-scroll-pin-word].is-active {
+  font-weight: 400;
+}
+/* Specifieker dan de gevendorde `[data-scroll-pin-panel] { display: flex }`, anders staan woord,
+   titel en tekst naast elkaar in plaats van onder elkaar. */
+[data-scroll-pin-panel].paneel {
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  padding-block: 2.5rem;
+  container-type: inline-size;
+}
+.paneel__woord {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: min(clamp(3rem, 1.4rem + 8vw, 8.5rem), calc(100cqw / (var(--langste-woord, 8) * 0.84)));
+  line-height: 0.88;
+  color: var(--geel);
+  max-width: 14ch;
+}
+.paneel__titel {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(1.2rem, 1rem + 0.9vw, 1.6rem);
+}
+.paneel__tekst {
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.8rem);
+  line-height: 1.3;
+  max-width: 30rem;
+}
+.panelen__naschrift {
+  padding-block: 2.5rem clamp(4rem, 3rem + 5vw, 7rem);
+}
+.panelen__naschrift .tekst {
+  max-width: var(--tekstbreedte);
+}
+.panelen__naschrift .knoppen {
+  margin-top: 1.75rem;
+}
+/* Mobiel en zonder JS: een veegcarrousel met snap; de pagina zelf scrolt nooit zijwaarts. */
+.panelen [data-scroll-pin-track]:focus-visible {
+  /* Het spoor is zo groot als het venster; een ring erbuiten zie je niet. */
+  outline-offset: -3px;
+}
+.panelen [data-scroll-pin-track] {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.panelen [data-scroll-pin-panel] {
+  padding-inline: var(--goot);
+}
+@media (max-width: 51.99rem) {
+  .panelen [data-scroll-pin-panel] {
+    flex: 0 0 86%;
+  }
+}
+@media (min-width: 52.0625rem) {
+  .panelen [data-scroll-pin][data-scroll-pin-pinned] .panelen__kopregel {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 2;
+    padding-top: calc(var(--kop-h) + 2rem);
+    padding-inline: var(--goot);
+    max-width: var(--breed);
+    margin-inline: auto;
+  }
+  .panelen [data-scroll-pin-panel] {
+    padding-inline: max(var(--goot), calc((100vw - var(--breed)) / 2 + var(--goot)));
+  }
+  .panelen [data-scroll-pin][data-scroll-pin-pinned] [data-scroll-pin-panel] {
+    padding-top: calc(var(--kop-h) + 8rem);
+  }
+}
+
+/* ── Citaat met foto ("Hoe ik denk") en gewone tekstsecties ─────────────────────────────── */
+
+.citaatblok {
+  margin: 0;
+}
+.citaatblok p {
+  margin: 0;
+}
+.citaatblok p::before {
+  content: "\201C";
+}
+.citaatblok p::after {
+  content: "\201D";
+}
+
+/* ── Punten ("Voor wie", "Waarom ik en niet een ander?") ─────────────────────────────── */
+
+.punten {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+.punten li {
+  padding-top: 1.1rem;
+  border-top: 0.2rem solid currentColor;
+}
+.punten strong {
+  display: block;
+  font-weight: 700;
+  font-size: 1.15em;
+  margin-bottom: 0.35rem;
+}
+@media (min-width: 52rem) {
+  .punten--kolommen {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2.5rem;
+  }
+}
+@media (min-width: 64rem) {
+  .punten-raster {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 4rem;
+    align-items: start;
+  }
+}
+
+/* ── Verwijzingen ("Waarom Human Margin") ──────────────────────────────────────────────── */
+
+.verwijzingen {
+  display: grid;
+  gap: 3rem;
+}
+@media (min-width: 52rem) {
+  .verwijzingen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 1rem + 3vw, 5rem);
+  }
+  .verwijzing:nth-child(2) {
+    margin-top: 6rem;
+  }
+}
+.verwijzing .foto {
+  aspect-ratio: 4 / 5;
+  margin-bottom: 1.5rem;
+}
+.verwijzing h3 {
+  margin-bottom: 0.9rem;
+}
+.verwijzing p + p {
+  margin-top: 0.4em;
+}
+.verwijzing .knop-tekst {
+  margin-top: 1rem;
+}
+.verwijzingen__kopregel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem 3rem;
+  align-items: flex-end;
+}
+.verwijzingen__kopregel .kantlijn {
+  margin-top: 0;
+  padding-bottom: 0.4rem;
+}
+
+/* ── Klanten ───────────────────────────────────────────────────────────────────────────── */
+
+.klanten {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 1.5rem;
+  align-items: end;
+}
+@media (min-width: 52rem) {
+  .klanten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.klant {
+  display: grid;
+  gap: 0.7rem;
+  justify-items: start;
+}
+.klant__logo {
+  display: block;
+  height: 2.4rem;
+  width: calc(2.4rem * var(--verhouding, 3));
+  max-width: 100%;
+  background: currentColor;
+  -webkit-mask: var(--logo) left center / contain no-repeat;
+  mask: var(--logo) left center / contain no-repeat;
+}
+.klant__naam {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+/* Een klant zonder logo (V11: alleen de naam) krijgt de naam op de hoogte van de logo's, in
+   de titelletter — zodat de rij één ritme houdt. */
+.klant--zonder-logo .klant__logo-vervanger {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  height: 2.4rem;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(0.85rem, 3.2vw, 1.15rem);
+}
+
+/* ── FAQ ───────────────────────────────────────────────────────────────────────────────── */
+
+.faq {
+  border-top: 0.2rem solid currentColor;
+}
+.faq details {
+  border-bottom: 1px solid color-mix(in srgb, var(--zwart) 30%, transparent);
+}
+.faq summary {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 2rem;
+  gap: 0.5rem;
+  align-items: baseline;
+  padding-block: 1.1rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+  line-height: 1.3;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: "+";
+  font-family: var(--font-kop);
+  font-size: 1.5rem;
+  line-height: 1;
+  justify-self: end;
+}
+.faq details[open] summary::after {
+  content: "\2212";
+}
+.faq__nr {
+  font-family: var(--font-kop);
+  font-weight: 400;
+  font-size: 1rem;
+}
+.faq__antwoord {
+  padding: 0 0 1.5rem 3.5rem;
+  max-width: calc(var(--tekstbreedte) + 3.5rem);
+}
+.faq__antwoord p + p {
+  margin-top: 0.8em;
+}
+.faq-raster .knoppen {
+  margin-top: 2.25rem;
+}
+@media (min-width: 64rem) {
+  .faq-raster {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: 4rem;
+    align-items: start;
+  }
+  .faq-raster .sectiekop {
+    position: sticky;
+    top: calc(var(--kop-h) + 2rem);
+  }
+}
+
+/* ── Contact (geel vlak) ───────────────────────────────────────────────────────────────── */
+
+.contactblok {
+  display: grid;
+  gap: 2.5rem;
+}
+@media (min-width: 52rem) {
+  .contactblok {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 4rem;
+    /* `end` liet de linkerkolom 239 px lager beginnen dan de rechter, met leeg geel erboven. */
+    align-items: start;
+  }
+}
+.contactblok__tekst {
+  container-type: inline-size;
+}
+.contactblok__tekst p {
+  max-width: 34rem;
+}
+.contactblok__tekst .knoppen {
+  margin-top: 1.75rem;
+}
+.contactlijst {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.contactlijst a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  text-decoration-thickness: 0.1em;
+}
+.contactlijst__label {
+  display: block;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+.bedrijfsgegevens {
+  margin-top: 1.5rem;
+  font-style: normal;
+  font-size: 0.95rem;
+}
+
+/* ── Cyclus (aanbod) ──────────────────────────────────────────────────────────────────── */
+
+.cyclus {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 3.25rem;
+  counter-reset: none;
+}
+.cyclus__stap {
+  position: relative;
+  border: 0.22rem solid currentColor;
+  padding: 1.25rem 1.25rem 1.4rem;
+  background: var(--wit);
+}
+.cyclus__nr {
+  display: block;
+  font-family: var(--font-kop);
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.cyclus__naam {
+  display: block;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 1.35rem;
+  margin-top: 0.4rem;
+}
+.cyclus__vraag {
+  display: block;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+.cyclus__pijl {
+  /* Gestapeld staat de pijl in de tussenruimte tussen twee blokken. Hij moet korter zijn dan die
+     ruimte (2,5 rem), anders schuift zijn punt achter het volgende blok en blijft er een streepje
+     van 12 px over. Draaien om de bovenkant houdt de rekensom eenvoudig: de pijl begint waar het
+     blok eindigt en loopt precies zijn eigen lengte naar beneden. */
+  position: absolute;
+  width: 2.6rem;
+  height: auto;
+  left: 2.2rem;
+  top: 100%;
+  margin-top: 0.3rem;
+  transform: rotate(90deg);
+  transform-origin: left top;
+}
+.cyclus__terug {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+}
+.cyclus__terug img {
+  width: 4.6rem;
+  height: auto;
+  transform: scaleX(-1) rotate(12deg);
+}
+.cyclus__tekst {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  max-width: 52rem;
+}
+@media (min-width: 52rem) {
+  .cyclus {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4.5rem;
+  }
+  .cyclus__pijl {
+    left: auto;
+    right: -4.25rem;
+    bottom: auto;
+    top: 42%;
+    transform: none;
+    width: 3.75rem;
+  }
+  .cyclus__tekst {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 4.5rem;
+  }
+}
+
+/* ── Aanbod-deel ──────────────────────────────────────────────────────────────────────── */
+
+.deel__kop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: clamp(1rem, 0.5rem + 1.5vw, 2.25rem);
+  row-gap: 0.25rem;
+  margin-bottom: 2.5rem;
+}
+.deel__nr {
+  font-family: var(--font-kop);
+  font-size: clamp(3.5rem, 2.2rem + 5vw, 7rem);
+  line-height: 0.9;
+  flex: none;
+}
+.deel__kop .kop-2 {
+  flex: 1 1 14ch;
+}
+.sectie[data-achtergrond="zwart"] .deel__nr {
+  color: var(--geel);
+}
+.deel__raster {
+  display: grid;
+  gap: 2rem 3.5rem;
+}
+@media (min-width: 52rem) {
+  .deel__raster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.deel__blok h3 {
+  margin-bottom: 0.75rem;
+}
+.deel__blok .tekst ul {
+  margin-top: 0.4rem;
+}
+.deel__prijs {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 0.22rem solid currentColor;
+  display: grid;
+  gap: 1.5rem 3rem;
+  align-items: start;
+}
+@media (min-width: 52rem) {
+  .deel__prijs {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+.prijs {
+  display: block;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(1.7rem, 1.2rem + 2vw, 3rem);
+  line-height: 1.02;
+}
+.prijs + .prijs {
+  margin-top: 0.75rem;
+}
+.prijs__btw {
+  display: inline-block;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  text-transform: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-left: 0.35rem;
+}
+.deel__intro p {
+  font-size: clamp(1.2rem, 1.02rem + 0.75vw, 1.55rem);
+  line-height: 1.4;
+}
+.deel__intro p + p {
+  margin-top: 0.6em;
+}
+
+/* ── Methode (M-A-R-G-I-N) ────────────────────────────────────────────────────────────── */
+
+.methode {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 0.2rem solid currentColor;
+}
+.methode li {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  column-gap: 1rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--zwart) 30%, transparent);
+}
+.methode__letter {
+  font-family: var(--font-kop);
+  font-size: 2.6rem;
+  line-height: 0.9;
+  grid-row: span 2;
+}
+.methode__woord {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 1.05rem;
+}
+@media (min-width: 52rem) {
+  .methode {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3.5rem;
+  }
+}
+
+/* ── Verhaal (story-word-light) en slotzin (kinetic-type) ─────────────────────────────── */
+
+.verhaal {
+  --swl-ink: var(--wit);
+  padding-block: 0;
+}
+.verhaal .swl__sticky {
+  padding-block: calc(var(--kop-h) + 2rem) 3rem;
+}
+.verhaal [data-story-text] {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(1.6rem, 1rem + 2.6vw, 3.4rem);
+  line-height: 1.08;
+  max-width: 58rem;
+}
+.sectie[data-achtergrond="licht"].verhaal,
+.sectie[data-achtergrond="grijs"].verhaal {
+  --swl-ink: var(--zwart);
+}
+
+.slotzin p {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: min(clamp(2.4rem, 1rem + 6.5vw, 8rem), calc((100vw - 2 * var(--goot)) / (var(--langste-woord, 10) * 0.84)));
+  line-height: 0.95;
+}
+.slotzin p + p {
+  margin-top: 0.3em;
+}
+.slotzin p:last-child:not([data-kinetic-type]) {
+  color: var(--geel);
+}
+.sectie[data-achtergrond="licht"].slotzin p:last-child:not([data-kinetic-type]),
+.sectie[data-achtergrond="grijs"].slotzin p:last-child:not([data-kinetic-type]) {
+  color: var(--blauw);
+}
+.slotzin [data-kinetic-type] {
+  font-family: var(--font-archivo), "Arial Black", sans-serif;
+}
+/* Zonder JavaScript: vol gewicht en volle dekking, in plaats van de dunne startwaarde. */
+html:not(.js) .slotzin [data-kinetic-type] {
+  --kt-w: 800;
+  --kt-b: 1;
+}
+.sectie[data-achtergrond="zwart"] .slotzin__regel[data-kinetic-type] {
+  --kt-color-rgb: 244 244 241;
+}
+.sectie[data-achtergrond="zwart"] .slotzin__regel[data-kinetic-type]:last-child {
+  --kt-color-rgb: 237 255 0;
+}
+.slotzin__kantlijn {
+  margin-top: 2rem;
+}
+
+/* ── Niet gevonden (404) ──────────────────────────────────────────────────────────────── */
+
+.nietgevonden .knoppen {
+  margin-top: 1.5rem;
+}
+
+/*
+ * De woorden van het verhaal die nog niet zijn opgelicht stonden op 16 % inkt: 1,53 : 1 op zwart.
+ * Dat is tekst die je ziet en niet kunt lezen; axe keurt het af als "serious". Op 45 % haalt de
+ * dimstand ruim 3 : 1 (de drempel voor grote tekst) en blijft het verschil met de opgelichte stand
+ * groot genoeg om het oplichten te zien. De gevendorde CSS van de feature blijft ongemoeid.
+ */
+.swl [data-story-word]:not(.is-lit) {
+  color: color-mix(in srgb, var(--swl-ink, #111010) 45%, transparent);
+}

@@ -1,0 +1,140 @@
+{
+  "naam": "Human Margin",
+  "contact": {
+    "email": "els@humanmargin.eu",
+    "telefoon": "+31687673886",
+    "telefoonWeergave": "+31 6 87 67 38 86",
+    "linkedin": "https://www.linkedin.com/in/els-verheirstraeten/",
+    "linkedinWeergave": "www.linkedin.com/in/els-verheirstraeten",
+    "calendly": "https://calendly.com/human-margin-info/30min"
+  },
+  "bedrijf": {
+    "handelsnaam": "Human Margin",
+    "rechtsvorm": "Sparrow Misc",
+    "straat": "Bergsingel 113a",
+    "postcode": "3037 GB",
+    "plaats": "Rotterdam",
+    "kvk": "85463612",
+    "btwId": ""
+  },
+  "btwLabel": "excl. btw",
+  "navigatie": [
+    {
+      "label": "Aanbod",
+      "pad": "/aanbod/"
+    },
+    {
+      "label": "Manifest",
+      "pad": "/manifest/"
+    },
+    {
+      "label": "Leeszaal",
+      "pad": "/leeszaal/",
+      "schakelaar": "leeszaal"
+    },
+    {
+      "label": "Over mij",
+      "pad": "/over-mij/"
+    },
+    {
+      "label": "Contact",
+      "pad": "/contact/"
+    }
+  ],
+  "kennismakingLabel": "Plan een kennismaking",
+  "klanten": [
+    {
+      "naam": "OFM.",
+      "logo": "/media/klanten/ofm.svg",
+      "logoVerhouding": 3.667
+    },
+    {
+      "naam": "Kiwitz",
+      "logo": "/media/klanten/kiwitz.svg",
+      "logoVerhouding": 3.673
+    },
+    {
+      "naam": "AI-revolution",
+      "logo": "/media/klanten/ai-revolution.png",
+      "logoVerhouding": 6.533
+    },
+    {
+      "naam": "growthentic"
+    }
+  ],
+  "credit": {
+    "tekst": "Website: Co-Creatie.ai",
+    "url": "https://www.co-creatie.ai/"
+  },
+  "schakelaars": {
+    "leeszaal": false,
+    "kantlijn": true,
+    "kineticType": true
+  },
+  "keuzehulp": {
+    "knop": "Stel je vraag",
+    "vraag": "Waar gaat je vraag over?",
+    "onderwerpen": [
+      {
+        "id": "nulmeting",
+        "label": "Nulmeting",
+        "onderwerp": "Vraag over de nulmeting"
+      },
+      {
+        "id": "regietraject",
+        "label": "Regietraject",
+        "onderwerp": "Vraag over het regietraject"
+      },
+      {
+        "id": "academie",
+        "label": "Academie",
+        "onderwerp": "Vraag over de academie"
+      },
+      {
+        "id": "sparring",
+        "label": "Sparring",
+        "onderwerp": "Vraag over sparring"
+      },
+      {
+        "id": "iets-anders",
+        "label": "Iets anders",
+        "onderwerp": "Een vraag aan Human Margin"
+      }
+    ],
+    "tweedeVraag": "Hoe wil je verder?",
+    "kennismaking": "Plan een kennismaking",
+    "mail": "Stuur een mail",
+    "bellen": "Bel even",
+    "terug": "Terug",
+    "sluiten": "Sluiten"
+  },
+  "cookiebanner": {
+    "tekst": "Mag ik meten hoe deze site gebruikt wordt? Dat gaat via Google Analytics. Nee is ook een antwoord.",
+    "accepteren": "Accepteren",
+    "weigeren": "Weigeren",
+    "instellingen": "Cookie-instellingen",
+    "meerLezen": "Lees de privacyverklaring"
+  },
+  "nietGevonden": {
+    "kop": "Deze pagina bestaat niet.",
+    "tekst": "Of niet meer.",
+    "knop": "Ga naar de home",
+    "beeld": "els-hand-voor-de-ogen"
+  },
+  "voet": {
+    "privacyLabel": "Privacy",
+    "skiplink": "Direct naar de inhoud",
+    "menu": "Menu",
+    "sluitMenu": "Sluit het menu"
+  },
+  "labels": {
+    "kiesStap": "Kies een stap",
+    "stapVan": "van",
+    "cyclus": "De cyclus van het aanbod",
+    "kvk": "KVK",
+    "btw": "Btw",
+    "linkedin": "LinkedIn",
+    "hoofdmenu": "Hoofdmenu",
+    "home": "Human Margin, naar de home"
+  }
+}

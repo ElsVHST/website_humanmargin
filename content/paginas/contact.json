@@ -1,0 +1,32 @@
+{
+  "slug": "contact",
+  "titel": "Contact: plan een kennismaking | Human Margin",
+  "beschrijving": "Plan een kennismaking van 30 minuten, stuur een mail of bel. Human Margin, Bergsingel 113a in Rotterdam.",
+  "ogBeeld": "els-lachend-op-de-trap",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "licht",
+      "kop": "Contact",
+      "lead": [
+        "Heb je een vermoeden dat het niet geregeld is, of heb je een heel plan en wil je even sparren? Dat en alles ertussen kan ook."
+      ],
+      "knoppen": [
+        { "tekst": "Plan een kennismaking", "doel": "kennismaking" },
+        { "tekst": "Stel je vraag", "doel": "keuzehulp" }
+      ],
+      "beeld": "els-lachend-op-de-trap",
+      "beeldFocus": "30% 40%"
+    },
+    {
+      "id": "gegevens",
+      "type": "contact",
+      "achtergrond": "geel",
+      "kop": "Contactgegevens",
+      "knop": { "tekst": "Plan een kennismaking", "doel": "kennismaking" },
+      "subkop": "Liever eerst even schrijven of bellen?",
+      "toonBedrijfsgegevens": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+Tegenproef van het testprogramma van de koppeling.
+Vóór K1 bestaat de route nog niet; dan hoort dit programma 0 keer PASS te geven.
+
+Gedraaid op 2026-09-22 19:57 tegen http://localhost:4790/api/mcp
+
+FAIL  1. aanroep zonder token geeft 401 met een geldige metadata-URL
+FAIL  2. het testtoken werkt niet op een productieroute
+FAIL  0. AC-S0 de serverinstructies komen letterlijk uit AGENTS.md
+FAIL  3. tekst wijzigen: de voorbeeldlink toont de nieuwe tekst, de demo nog de oude
+FAIL  4. publiceren: de demo toont de nieuwe tekst
+FAIL  5. terugdraaien: de demo toont weer de oude tekst
+FAIL  6. nieuwe pagina met foto: verkleind en zonder GPS
+FAIL  7. een SVG wordt geweigerd
+FAIL  8. een poging op package.json wordt geweigerd
+FAIL  9. een voorstel dat het schema breekt wordt geweigerd, met de reden
+FAIL 10. <script> in een alinea staat als tekst op de voorbeeldlink
+FAIL 11. het zesde open voorstel wordt geweigerd
+FAIL 12. opruimen: 0 testtakken over en content ongewijzigd
+
+koppeling-test: FAIL (0/13)

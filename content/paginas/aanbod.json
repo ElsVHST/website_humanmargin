@@ -1,0 +1,275 @@
+{
+  "slug": "aanbod",
+  "titel": "Aanbod: nulmeting, regietraject en academie | Human Margin",
+  "beschrijving": "Drie delen die op elkaar volgen: de nulmeting, het regietraject en de Human Margin Academie. Plus Human Sparring. Met prijzen.",
+  "ogBeeld": "trap-van-boven",
+  "secties": [
+    {
+      "id": "opening",
+      "type": "opening",
+      "achtergrond": "licht",
+      "kop": "Het aanbod van Human Margin",
+      "lead": [
+        "Het aanbod bestaat uit drie delen die op elkaar volgen. Het zijn geen pakketten waaruit je kiest."
+      ],
+      "knoppen": [
+        {
+          "tekst": "Plan een kennismaking",
+          "doel": "kennismaking"
+        },
+        {
+          "tekst": "Stel je vraag",
+          "doel": "keuzehulp"
+        }
+      ],
+      "beeld": "trap-van-boven",
+      "beeldFocus": "50% 60%"
+    },
+    {
+      "id": "cyclus",
+      "type": "cyclus",
+      "achtergrond": "grijs",
+      "stappen": [
+        {
+          "nummer": "01",
+          "naam": "Nulmeting",
+          "vraag": "Waar staan we nu?"
+        },
+        {
+          "nummer": "02",
+          "naam": "Regietraject",
+          "vraag": "Wat richten we in?"
+        },
+        {
+          "nummer": "03",
+          "naam": "Academie",
+          "vraag": "Hoe houden we het op peil?"
+        }
+      ],
+      "terug": "En dan terug naar 01",
+      "tekst": [
+        "De nulmeting is de basis. Elk traject begint daar. Want zonder meting weet niemand wat er nodig is.",
+        "Het regietraject volgt eruit. De academie houdt in stand wat er is ingericht, en meet na verloop van tijd opnieuw.",
+        "Daarmee is het geen rechte lijn maar een cyclus. De nulmeting is het beginpunt en het terugkeerpunt."
+      ]
+    },
+    {
+      "id": "nulmeting",
+      "type": "aanbod-deel",
+      "achtergrond": "licht",
+      "nummer": "01",
+      "titel": "De nulmeting",
+      "blokken": [
+        {
+          "kop": "Wat het is",
+          "tekst": [
+            "Een onderzoek naar waar de organisatie staat met AI. Niet alleen naar de systemen en de documenten, maar ook naar de mensen die ermee werken."
+          ]
+        },
+        {
+          "kop": "Wat we doen",
+          "lijst": [
+            "Overzicht van het AI-gebruik in de organisatie: wat, waarvoor, door wie",
+            "Welke afspraken zijn er al en wat gebeurt ermee?",
+            "Sterke punten en aandachtspunten",
+            "Een prioriteitenkaart met concrete vervolgstappen",
+            "Bespreking met het management / de verantwoordelijke"
+          ]
+        },
+        {
+          "kop": "Wat het oplevert",
+          "lijst": [
+            "Een nulmeting om toekomstige vooruitgang tegen te meten.",
+            "Roadmap met vervolgstappen en prioriteiten.",
+            "Algemene toolaanbevelingen. We gaan niet in op elke AI tool die gebruikt wordt, maar je krijgt wel algemene richtlijnen die voor alle tools gelden."
+          ],
+          "naschrift": [
+            "Hiermee weet je wat je te doen staat en kan je zelf aan de slag."
+          ]
+        }
+      ],
+      "prijsKop": "Wat het kost",
+      "prijzen": [
+        {
+          "vanaf": true,
+          "bedrag": 997
+        }
+      ],
+      "prijsToelichting": [
+        "Heb je hulp nodig bij de vervolgstappen, dan is er een regietraject.",
+        "De omvang hiervan volgt uit wat de nulmeting heeft opgeleverd, en is steeds op maat."
+      ],
+      "inzet": "ai-act-met-markeerstift"
+    },
+    {
+      "id": "regietraject",
+      "type": "aanbod-deel",
+      "achtergrond": "grijs",
+      "nummer": "02",
+      "titel": "Het regietraject",
+      "blokken": [
+        {
+          "kop": "Wat het is",
+          "tekst": [
+            "De begeleiding bij de stappen die uit de nulmeting zijn gekomen. Van bewustzijn in de organisatie tot beleid dat daadwerkelijk wordt gebruikt."
+          ]
+        },
+        {
+          "kop": "Wat erin zit",
+          "lijst": [
+            "Een AI-kompas: wat wil de organisatie wel en wat niet",
+            "AI-beleid dat past bij het werk zoals het echt gedaan wordt",
+            "Praktische gebruiksregels voor medewerkers",
+            "Rollen en verantwoordelijkheden: wie beslist, wie grijpt in, wie escaleert",
+            "Begeleiding bij de invoering, zodat het beleid niet in een la verdwijnt"
+          ]
+        },
+        {
+          "kop": "Wat het oplevert",
+          "tekst": [
+            "Afspraken die kloppen met het werk, mensen die weten wat er van hen wordt verwacht, en een dossier waarmee je kunt laten zien dat je hebt nagedacht."
+          ]
+        }
+      ],
+      "prijsKop": "Wat het kost",
+      "prijzen": [
+        {
+          "vanaf": true,
+          "bedrag": 2999
+        }
+      ],
+      "prijsToelichting": [
+        "Afhankelijk van omvang.",
+        "Een gedetailleerde offerte komt na de nulmeting."
+      ]
+    },
+    {
+      "id": "academie",
+      "type": "aanbod-deel",
+      "achtergrond": "licht",
+      "nummer": "03",
+      "titel": "De Human Margin Academie",
+      "blokken": [
+        {
+          "kop": "Wat het is",
+          "tekst": [
+            "Doorlopend onderhoud van wat mensen zelf moeten kunnen. De wet vraagt om iemand die kan ingrijpen, en dat vermogen blijft alleen bestaan wanneer het geoefend wordt."
+          ]
+        },
+        {
+          "kop": "Wat erin zit",
+          "tekst": [
+            "Vier uur contacttijd per maand, naar eigen keuze in te vullen:"
+          ],
+          "lijst": [
+            "Een strategiesessie met het MT",
+            "Een geletterdheidssessie voor medewerkers",
+            "Een workshop",
+            "Of een combinatie, bijvoorbeeld twee uur MT en twee uur workshop",
+            "Losse sparringsessies"
+          ]
+        },
+        {
+          "kop": "Daarnaast doorlopend",
+          "lijst": [
+            "Op de hoogte blijven van wat er speelt rond deskilling en menselijk kapitaal",
+            "Oordeelsvorming en professioneel tegenspel",
+            "Werkvormen die het menselijke werk blijven oefenen",
+            "Jaarlijkse hermeting op de nulmeting"
+          ]
+        },
+        {
+          "kop": "Wat het oplevert",
+          "tekst": [
+            "Een organisatie waarin de mens die moet kunnen ingrijpen, dat ook daadwerkelijk blijft kunnen. En doordat er periodiek gemeten wordt, is dat aantoonbaar in plaats van een gevoel."
+          ]
+        }
+      ],
+      "prijsKop": "Wat het kost",
+      "prijzen": [
+        {
+          "bedrag": 1399,
+          "eenheid": "per maand"
+        }
+      ]
+    },
+    {
+      "id": "sparring",
+      "type": "aanbod-deel",
+      "achtergrond": "zwart",
+      "nummer": "04",
+      "titel": "Human Sparring",
+      "intro": [
+        "Echt klankborden in plaats van gelijk krijgen en kritische vragen in plaats van bevestiging.",
+        "Want soms heb je geen antwoord nodig, maar alleen betere vragen.",
+        "Inclusief sporadisch ongevraagd advies.",
+        "Strippenkaart of losse sessies. Vaste afspraken of bij nood."
+      ],
+      "prijzen": [
+        {
+          "voor": "Kaarten",
+          "vanaf": true,
+          "bedrag": 1150,
+          "eenheid": "voor 10 sessies"
+        },
+        {
+          "voor": "Losse sessies",
+          "bedrag": 125,
+          "eenheid": "per sessie"
+        }
+      ]
+    },
+    {
+      "id": "methode",
+      "type": "methode",
+      "achtergrond": "licht",
+      "kop": "De Human Margin methode",
+      "letters": [
+        {
+          "letter": "M",
+          "woord": "Map",
+          "tekst": "Inventariseren welke AI er draait, wie AI gebruikt en hoe"
+        },
+        {
+          "letter": "A",
+          "woord": "Awareness",
+          "tekst": "Bewust maken van de mogelijke risico's en hoe je die kan vermijden. AI geletterdheidstraining hoort hierbij."
+        },
+        {
+          "letter": "R",
+          "woord": "Reclaim",
+          "tekst": "Kiezen wat je wel en niet wil met AI. Het AI-kompas"
+        },
+        {
+          "letter": "G",
+          "woord": "Guide",
+          "tekst": "Vastleggen in beleid en een gids"
+        },
+        {
+          "letter": "I",
+          "woord": "Integrate",
+          "tekst": "Voorkomen dat die gids in een digitale la verdwijnt"
+        },
+        {
+          "letter": "N",
+          "woord": "Nurture",
+          "tekst": "Voeden, twee kanten op. De toepassingen doorontwikkelen, en de mens doorontwikkelen. Plus bewust kiezen wat je met de vrijgekomen ruimte doet"
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "achtergrond": "geel",
+      "kop": "Contact",
+      "tekst": [
+        "Heb je een vermoeden dat het niet geregeld is, of heb je een heel plan en wil je even sparren? Dat en alles ertussen kan ook."
+      ],
+      "knop": {
+        "tekst": "Plan een kennismaking",
+        "doel": "kennismaking"
+      },
+      "subkop": "Liever eerst even schrijven of bellen?"
+    }
+  ]
+}

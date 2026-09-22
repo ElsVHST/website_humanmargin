@@ -1,0 +1,911 @@
+@import "tailwindcss";
+
+/*
+ * Human Margin — stijlbasis. Bron: het brandbook (dia 6: kleuren, dia 7: letters, dia 9: hoe ziet 't eruit).
+ * Alleen de vijf merkkleuren, hun transparante varianten, transparent en currentColor (AC-M1).
+ * Geen verlopen, geen zachte schaduwen, hoeken hoogstens 0,25 rem (§5.8).
+ */
+@theme {
+  --color-*: initial;
+  --color-wit: #f4f4f1;
+  --color-zwart: #111010;
+  --color-geel: #edff00;
+  --color-blauw: #002cff;
+  --color-grijs: #ddddd3;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --font-*: initial;
+  --font-kop: var(--font-archivo-black), "Arial Black", Arial, sans-serif;
+  --font-tekst: var(--font-inter), system-ui, sans-serif;
+  --font-citaat: var(--font-playfair), Georgia, serif;
+  --shadow-*: initial;
+  --radius-*: initial;
+}
+
+:root {
+  --wit: #f4f4f1;
+  --zwart: #111010;
+  --geel: #edff00;
+  --blauw: #002cff;
+  --grijs: #ddddd3;
+  --kop-h: 4rem;
+  --goot: clamp(1rem, 4vw, 2.5rem);
+  --breed: 82rem;
+  --tekstbreedte: 38rem;
+  --kantlijn: 14rem;
+  /* Achtergrond en voorgrond van de huidige sectie; secties zetten ze zelf. */
+  --vlak: var(--wit);
+  --inkt: var(--zwart);
+  --inkt-zacht: color-mix(in srgb, var(--zwart) 78%, transparent);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (min-width: 64rem) {
+  :root {
+    --kop-h: 4.75rem;
+  }
+}
+
+/* ── Basis ─────────────────────────────────────────────────────────────────────────────── */
+
+html {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  color: var(--zwart);
+  background: var(--zwart);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--kop-h) + 1rem);
+}
+body {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  background: var(--wit);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-wrap: break-word;
+}
+@media (min-width: 40rem) {
+  body {
+    font-size: 1.125rem;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+::selection {
+  background: var(--geel);
+  color: var(--zwart);
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 0.08em;
+}
+:focus-visible {
+  outline: 3px solid var(--blauw);
+  outline-offset: 3px;
+}
+.op-donker :focus-visible,
+.op-donker:focus-visible {
+  outline-color: var(--geel);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skiplink {
+  position: fixed;
+  left: 1rem;
+  top: -10rem;
+  z-index: 100;
+  background: var(--geel);
+  color: var(--zwart);
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+}
+.skiplink:focus {
+  top: 1rem;
+  outline-color: var(--zwart);
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--breed);
+  margin-inline: auto;
+  padding-inline: var(--goot);
+}
+
+/* ── Typografie (dia 7) ────────────────────────────────────────────────────────────────── */
+
+.kop-1,
+.kop-2,
+.kop-3,
+.label,
+.knop,
+.kop-woord {
+  font-family: var(--font-kop);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+/*
+ * De grootste kop past altijd: het langste woord (door de server als --langste-woord meegegeven)
+ * krijgt nooit meer dan de beschikbare breedte. Archivo Black is breed: ±0,8 em per hoofdletter.
+ */
+/*
+ * Een kop mag nooit breder worden dan de kolom waarin hij staat. `cqw` meet die kolom (de dragers
+ * hieronder zetten `container-type`), en het langste woord komt als --langste-woord uit de server.
+ * Zonder container valt cqw terug op de schermbreedte — dan geldt dezelfde rekensom op het scherm.
+ */
+.sectiekop,
+.opening__koppen,
+.deel__kop,
+.tekst,
+.verwijzing {
+  container-type: inline-size;
+}
+.kop-1 {
+  font-size: min(clamp(2.6rem, 1.1rem + 6.2vw, 7rem), calc(100cqw / (var(--langste-woord, 10) * 0.84)));
+  line-height: 0.92;
+}
+.kop-2 {
+  font-size: min(clamp(2rem, 1.15rem + 3.4vw, 4.25rem), calc(100cqw / (var(--langste-woord, 10) * 0.84)));
+  line-height: 0.95;
+}
+.kop-3 {
+  font-size: clamp(1.2rem, 1rem + 0.9vw, 1.65rem);
+  line-height: 1.05;
+}
+.label {
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+.lead {
+  font-size: clamp(1.2rem, 1.02rem + 0.75vw, 1.55rem);
+  line-height: 1.42;
+}
+.citaat {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.75rem, 1.15rem + 2.4vw, 3.25rem);
+  line-height: 1.14;
+}
+.tekst p + p,
+.tekst p + ul,
+.tekst ul + p,
+.tekst p + ol {
+  margin-top: 1em;
+}
+.tekst ul {
+  list-style: none;
+  padding: 0;
+}
+.tekst ul > li {
+  position: relative;
+  padding-left: 1.4em;
+}
+.tekst ul > li + li {
+  margin-top: 0.45em;
+}
+.tekst ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.7em;
+  height: 0.28em;
+  background: currentColor;
+}
+.tekst strong {
+  font-weight: 700;
+}
+/* Een korte sectie zonder foto (bv. "Waarom nu"): de tekst groter, als statement. */
+.tekst--groot {
+  font-size: clamp(1.25rem, 1.02rem + 0.95vw, 1.75rem);
+  line-height: 1.42;
+}
+.tekstvlak > .tekst.tekst--groot {
+  max-width: 48rem;
+}
+@media (min-width: 64rem) {
+  .tekstvlak--groot {
+    grid-template-columns: minmax(0, 48rem) var(--kantlijn) minmax(0, 1fr);
+  }
+}
+
+/* ── Secties en achtergronden ─────────────────────────────────────────────────────────── */
+
+.sectie {
+  position: relative;
+  background: var(--vlak);
+  color: var(--inkt);
+  padding-block: clamp(4rem, 3rem + 5vw, 8rem);
+}
+.sectie[data-achtergrond="licht"] {
+  --vlak: var(--wit);
+  --inkt: var(--zwart);
+  --inkt-zacht: color-mix(in srgb, var(--zwart) 78%, transparent);
+}
+.sectie[data-achtergrond="grijs"] {
+  --vlak: var(--grijs);
+  --inkt: var(--zwart);
+  --inkt-zacht: color-mix(in srgb, var(--zwart) 80%, transparent);
+}
+.sectie[data-achtergrond="geel"] {
+  --vlak: var(--geel);
+  --inkt: var(--zwart);
+  --inkt-zacht: color-mix(in srgb, var(--zwart) 82%, transparent);
+}
+.sectie[data-achtergrond="zwart"] {
+  --vlak: var(--zwart);
+  --inkt: var(--wit);
+  --inkt-zacht: color-mix(in srgb, var(--wit) 80%, transparent);
+}
+.zacht {
+  color: var(--inkt-zacht);
+}
+
+.sectiekop {
+  margin-bottom: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+}
+.sectiekop .label {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/*
+ * De kantlijn (signatuur): vanaf 64 rem een tekstkolom van ≤ 38 rem met daarnaast een kantlijn van
+ * ±14 rem voor de notities, en rechts ruimte voor een foto. Smaller staat alles onder elkaar.
+ */
+.tekstvlak {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+.tekstvlak > .tekst {
+  max-width: var(--tekstbreedte);
+}
+@media (min-width: 64rem) {
+  .tekstvlak {
+    grid-template-columns: minmax(0, var(--tekstbreedte)) var(--kantlijn) minmax(0, 1fr);
+    column-gap: 2.5rem;
+    align-items: start;
+  }
+  .tekstvlak > .tekst {
+    grid-column: 1;
+  }
+  .tekstvlak > .kantlijn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .tekstvlak > .zijbeeld {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .tekstvlak--links > .zijbeeld {
+    grid-column: 1;
+  }
+  .tekstvlak--links > .tekst {
+    grid-column: 3;
+  }
+}
+
+/* ── Knoppen (dia 9: "MEER WETEN" in Archivo Black op een gele kwaststreep) ───────────────── */
+
+.knoppen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+.knop {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.85em 1.35em 0.8em;
+  font-size: 1rem;
+  line-height: 1.1;
+  color: var(--zwart);
+  text-decoration: none;
+  /* De knopversie van de kwaststreek: het dichte deel van de streek, zodat elke letter op verf
+     staat. De volledige, rechts droog uitlopende streek zit op de markeerstift (.markeer). */
+  background: url("/merk/getekend/kwaststreep-knop.svg") left center / calc(100% + 0.9em) 116% no-repeat;
+  padding-right: 1.1em;
+  margin-right: 0.8em;
+  border: 0;
+  cursor: pointer;
+  transition: background-size 0.25s var(--ease);
+}
+.knop:hover {
+  background-size: calc(100% + 1.4em) 124%;
+}
+.knop:active {
+  translate: 0 1px;
+}
+.knop:focus-visible {
+  outline-color: var(--blauw);
+}
+.op-donker .knop:focus-visible {
+  outline-color: var(--wit);
+}
+/* Op een geel vlak valt de gele streep weg: dan een zwart blok met gele letters (17,1 : 1). */
+.sectie[data-achtergrond="geel"] .knop {
+  background: var(--zwart);
+  color: var(--geel);
+  padding-right: 1.35em;
+  margin-right: 0;
+}
+.sectie[data-achtergrond="geel"] .knop:hover {
+  background: var(--zwart);
+  text-decoration: underline;
+}
+.sectie[data-achtergrond="geel"] .knop:focus-visible {
+  outline-color: var(--zwart);
+}
+/* De hoofdknop op licht krijgt twee blauwe pijlen, zoals "MEER WETEN" op dia 9. */
+.knop--pijlen {
+  margin-left: 4.75rem;
+}
+.knop--pijlen::before,
+.knop--pijlen::after {
+  content: "";
+  position: absolute;
+  right: calc(100% + 0.5rem);
+  background: center / contain no-repeat;
+  pointer-events: none;
+}
+.knop--pijlen::before {
+  width: 4.3rem;
+  height: 1.8rem;
+  top: -1.05rem;
+  background-image: url("/merk/getekend/pijl-gebogen.svg");
+}
+.knop--pijlen::after {
+  width: 3.8rem;
+  height: 0.9rem;
+  top: calc(50% - 0.2rem);
+  background-image: url("/merk/getekend/pijl-recht.svg");
+}
+/* Tekstknop: onderstreept, voor de tweede keus naast de hoofdknop. */
+.knop-tekst {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.9rem;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 1rem;
+  line-height: 1.1;
+  text-decoration: underline;
+  text-decoration-thickness: 0.14em;
+  text-underline-offset: 0.3em;
+  text-decoration-color: currentColor;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+.op-donker .knop-tekst {
+  text-decoration-color: var(--geel);
+}
+.knop-tekst:hover {
+  text-decoration-thickness: 0.24em;
+}
+
+/* ── Markeerstift en doorhaling (AC-B7) ────────────────────────────────────────────────── */
+
+.markeer {
+  color: var(--zwart);
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  background: url("/merk/getekend/kwaststreep.svg") left 60% / 100% 88% no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+html.js .markeer {
+  background-size: 0% 88%;
+  transition: background-size 0.9s var(--ease);
+}
+html.js .markeer.is-getekend {
+  background-size: 100% 88%;
+}
+.omcirkeld {
+  position: relative;
+  display: inline;
+}
+.omcirkeld::after {
+  content: "";
+  position: absolute;
+  left: -0.7em;
+  right: -0.7em;
+  top: -0.55em;
+  bottom: -0.55em;
+  background: url("/merk/getekend/omcirkeling.svg") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.doorhaling {
+  text-decoration: none;
+  background: url("/merk/getekend/doorhaling.svg") left 58% / 100% 0.42em no-repeat;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .markeer,
+  html.js .markeer.is-getekend {
+    background-size: 100% 88%;
+    transition: none;
+  }
+}
+
+/* ── Notities in de kantlijn (V14, AC-B6) ─────────────────────────────────────────────── */
+
+.kantlijn {
+  position: relative;
+}
+.notitie {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  line-height: 1;
+  pointer-events: none;
+  transform: rotate(-4deg);
+}
+.notitie__tekst {
+  display: block;
+}
+.notitie--blauw {
+  color: var(--blauw);
+  font-family: FeistyRegular, "Comic Sans MS", cursive;
+  font-size: clamp(1.9rem, 1.4rem + 1.6vw, 2.8rem);
+}
+.notitie--geel {
+  color: var(--geel);
+  font-family: AtomicMarker, "Arial Black", sans-serif;
+  font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.5rem);
+}
+.notitie__pijl {
+  display: block;
+  width: 4.5rem;
+  height: auto;
+}
+html.js .notitie {
+  opacity: 0;
+  translate: 0 0.6rem;
+  transition:
+    opacity 0.5s var(--ease),
+    translate 0.6s var(--ease);
+}
+html.js .notitie.is-zichtbaar {
+  opacity: 1;
+  translate: 0 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js .notitie {
+    translate: none;
+    transition: opacity 0.2s linear;
+  }
+}
+@media (max-width: 63.99rem) {
+  .kantlijn {
+    margin-top: -1rem;
+  }
+}
+
+/* ── Beelden ───────────────────────────────────────────────────────────────────────────── */
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--grijs);
+}
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Eén pixel over de rand, zodat het grijze laadvlak nooit als haarlijn langs de foto zichtbaar blijft. */
+.foto > img {
+  inset: -1px !important;
+  width: calc(100% + 2px) !important;
+  height: calc(100% + 2px) !important;
+}
+.inzet {
+  display: block;
+  width: min(12.5rem, 60vw);
+  max-width: 12.5rem;
+  margin-block: 1.75rem;
+  transform: rotate(-2deg);
+  border: 0.35rem solid var(--wit);
+  background: var(--wit);
+}
+.sectie[data-achtergrond="zwart"] .inzet {
+  border-color: var(--zwart);
+}
+.inzet img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.zijbeeld {
+  aspect-ratio: 4 / 5;
+}
+@media (min-width: 64rem) {
+  .zijbeeld {
+    margin-right: calc(-1 * var(--goot));
+  }
+  .tekstvlak--links > .zijbeeld {
+    margin-right: 0;
+    margin-left: calc(-1 * var(--goot));
+  }
+}
+
+/* ── Kop en menu ───────────────────────────────────────────────────────────────────────── */
+
+.kop {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  height: var(--kop-h);
+  background: var(--zwart);
+  color: var(--wit);
+}
+.kop__binnen {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.kop__logo {
+  position: relative;
+  display: block;
+  height: calc(var(--kop-h) - 1.1rem);
+  aspect-ratio: 169.233 / 81.9771;
+  flex: none;
+}
+.kop__logo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.35s var(--ease);
+}
+.kop__logo .kop__merkteken {
+  inset: 0.15rem auto 0.15rem 0;
+  width: auto;
+  height: calc(100% - 0.3rem);
+  aspect-ratio: 585 / 656;
+  opacity: 0;
+}
+.kop.is-past-hero .kop__volledig {
+  opacity: 0;
+}
+.kop.is-past-hero .kop__merkteken {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kop__logo img {
+    transition-duration: 0.2s;
+  }
+}
+.kop__nav {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .kop__nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2vw, 2.25rem);
+  }
+  .kop__menuknop,
+  .menu-zonder-js {
+    display: none !important;
+  }
+}
+.kop__link {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  padding-block: 0.6rem;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.2em;
+  text-underline-offset: 0.45em;
+  transition: text-decoration-color 0.2s linear;
+}
+.kop__link:hover,
+.kop__link[aria-current="page"] {
+  text-decoration-color: var(--geel);
+}
+.kop__link[aria-current="page"] {
+  color: var(--geel);
+}
+.kop .knop {
+  font-size: 0.85rem;
+  min-height: 2.75rem;
+}
+.kop__menuknop {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding-inline: 0.75rem;
+  background: var(--geel);
+  color: var(--zwart);
+  border: 0;
+  cursor: pointer;
+}
+html:not(.js) .kop__menuknop {
+  display: none;
+}
+.menu-zonder-js {
+  display: none;
+}
+html:not(.js) .menu-zonder-js {
+  display: block;
+}
+.menu-zonder-js > summary {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  list-style: none;
+  cursor: pointer;
+  background: var(--geel);
+  color: var(--zwart);
+  padding: 0.7rem 0.75rem;
+}
+.menu-zonder-js > summary::-webkit-details-marker {
+  display: none;
+}
+.menu-zonder-js[open] > .menu__lijst {
+  position: fixed;
+  inset: var(--kop-h) 0 0;
+  background: var(--zwart);
+  padding: 2rem var(--goot);
+}
+
+.menu {
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--zwart);
+  color: var(--wit);
+}
+.menu::backdrop {
+  background: var(--zwart);
+}
+.menu__kop {
+  height: var(--kop-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu__lijst {
+  list-style: none;
+  margin: 0;
+  padding: 2rem 0 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.menu__lijst a {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 1.4rem + 5vw, 3.4rem);
+  line-height: 1.05;
+  text-decoration: none;
+  display: inline-block;
+  padding-block: 0.3rem;
+}
+.menu__lijst a[aria-current="page"] {
+  color: var(--geel);
+}
+.menu__cta {
+  margin-top: 2.5rem;
+}
+
+/* ── Voet ──────────────────────────────────────────────────────────────────────────────── */
+
+.voet {
+  background: var(--zwart);
+  color: var(--wit);
+  padding-block: 4rem 2.5rem;
+  font-size: 0.95rem;
+}
+.voet__raster {
+  display: grid;
+  gap: 2.5rem;
+}
+@media (min-width: 52rem) {
+  .voet__raster {
+    grid-template-columns: 1.2fr 1fr 1fr;
+  }
+}
+.voet__logo {
+  width: 11rem;
+  height: auto;
+}
+.voet ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.voet a {
+  text-decoration-color: var(--geel);
+}
+.voet__knopje {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: var(--geel);
+  cursor: pointer;
+}
+.voet__onder {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--wit) 25%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  justify-content: space-between;
+}
+
+/* Zolang het mobiele menu openstaat blijft de pagina eronder staan waar hij stond. */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ── Dialogen (keuzehulp, cookiebanner) ───────────────────────────────────────────────── */
+
+.keuzehulp {
+  /* De reset van Tailwind zet `margin: 0` op alles. Een dialoog centreert zichzelf juist mét
+     `margin: auto`; zonder die regel plakt hij linksboven in de hoek, over de kop heen. */
+  margin: auto;
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  background: var(--wit);
+  color: var(--zwart);
+}
+.keuzehulp::backdrop {
+  background: color-mix(in srgb, var(--zwart) 82%, transparent);
+}
+.keuzehulp__binnen {
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+}
+.keuzehulp__sluit {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  background: none;
+  border: 0;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--zwart);
+}
+.keuzehulp__opties {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.keuzehulp__optie {
+  width: 100%;
+  min-height: 3rem;
+  text-align: left;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  background: var(--grijs);
+  color: var(--zwart);
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.keuzehulp__optie:hover {
+  border-color: var(--zwart);
+}
+.keuzehulp__wegen {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.9rem;
+}
+.keuzehulp__weg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-height: 3rem;
+  padding: 0.85rem 1rem;
+  background: var(--zwart);
+  color: var(--wit);
+  text-decoration: none;
+}
+.keuzehulp__weg strong {
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.keuzehulp__weg span {
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--wit) 82%, transparent);
+}
+.keuzehulp__weg:hover strong,
+.keuzehulp__weg:focus-visible strong {
+  color: var(--geel);
+}
+.keuzehulp__terug {
+  margin-top: 1.25rem;
+}
+
+.cookiebanner {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 60;
+  background: var(--zwart);
+  color: var(--wit);
+  border-top: 0.3rem solid var(--geel);
+  padding: 1rem var(--goot) calc(1rem + env(safe-area-inset-bottom));
+}
+.cookiebanner__binnen {
+  max-width: var(--breed);
+  margin-inline: auto;
+  display: grid;
+  gap: 0.9rem;
+}
+@media (min-width: 52rem) {
+  .cookiebanner__binnen {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+.cookiebanner__knoppen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.cookiebanner__knoppen button {
+  min-height: 2.9rem;
+  min-width: 9rem;
+  font-family: var(--font-kop);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 0.18rem solid var(--geel);
+}
+.cookiebanner__ja {
+  background: var(--geel);
+  color: var(--zwart);
+}
+.cookiebanner__nee {
+  background: var(--zwart);
+  color: var(--wit);
+}

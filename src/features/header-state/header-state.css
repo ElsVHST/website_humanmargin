@@ -1,0 +1,45 @@
+/**
+ * header-state.css
+ * ------------------------------------------------------------------------
+ * Namespace: klasse `.is-past-hero` (configureerbaar via JS-optie
+ * `activeClass`) op het header-element. Deze CSS geeft alleen een
+ * voorbeeld-toepassing — pas de selectors aan je eigen header-opmaak aan.
+ *
+ * Herkomst: techniek gezien op faresmasharawi.nl (22-09-2026), eigen
+ * implementatie.
+ */
+
+.hs-header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  padding-block: clamp(0.75rem, 2.2vw, 1.375rem);
+  transition: background-color 0.3s ease;
+}
+
+/* Onderdelen die moeten wegschuiven/vervagen zodra de header "voorbij de
+   hero" is — zet dit attribuut op de elementen die moeten reageren. */
+.hs-header.is-past-hero [data-hs-fade] {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-0.5rem);
+}
+
+[data-hs-fade] {
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-hs-fade] {
+    transition: opacity 0.2s linear;
+  }
+  .hs-header.is-past-hero [data-hs-fade] {
+    transform: none;
+  }
+}

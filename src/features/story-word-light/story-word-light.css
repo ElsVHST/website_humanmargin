@@ -1,0 +1,63 @@
+/**
+ * story-word-light.css
+ * ------------------------------------------------------------------------
+ * Namespace: klasse `.swl` (root) / `.swl__sticky` (sticky binnenkant) /
+ * attribuut `[data-story-word]` (elk woord) / klasse `.is-lit`.
+ *
+ * Herkomst: drempelwaarden en verhoudingen gezien op faresmasharawi.nl
+ * (22-09-2026), eigen implementatie.
+ */
+
+.swl {
+  position: relative;
+  /* Scroll-baan: hoe langer, hoe trager de tekst oplicht. 1.7 = gemeten
+     waarde van de bron (`lg:h-[170vh]`). */
+  min-height: calc(var(--swl-length, 1.7) * 100vh);
+}
+
+.swl__sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+}
+
+.swl [data-story-word] {
+  color: color-mix(in srgb, var(--swl-ink, #111010) 16%, transparent);
+  transition: color 0.5s ease;
+}
+
+.swl [data-story-word].is-lit {
+  color: var(--swl-ink, #111010);
+}
+
+/* Benadrukte woorden: "dichtgedrukt" bij het oplichten — smaller (wdth) en
+   fors vetter (wght) tegelijk. Werkt met elke variable font die deze assen
+   ondersteunt; op een font zonder die assen heeft de eigenschap geen
+   zichtbaar effect maar blijft de rest van het component werken. */
+.swl [data-story-word] em,
+.swl [data-story-word] strong,
+.swl [data-story-word] b,
+.swl [data-story-word] i {
+  font-style: normal;
+  font-variation-settings: 'wdth' var(--swl-em-wdth, 92), 'wght' var(--swl-em-wght, 420);
+  transition: font-variation-settings 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.swl [data-story-word].is-lit em,
+.swl [data-story-word].is-lit strong,
+.swl [data-story-word].is-lit b,
+.swl [data-story-word].is-lit i {
+  font-variation-settings: 'wdth' var(--swl-em-wdth-lit, 88), 'wght' var(--swl-em-wght-lit, 800);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swl [data-story-word],
+  .swl [data-story-word] em,
+  .swl [data-story-word] strong,
+  .swl [data-story-word] b,
+  .swl [data-story-word] i {
+    transition: none;
+  }
+}

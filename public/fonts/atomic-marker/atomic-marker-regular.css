@@ -1,0 +1,24 @@
+/*
+Font: 		Atomic Marker
+Style: 		Regular
+URL: 		https://youworkforthem.com/font/T16369/atomic-marker
+Foundry: 	Set Sail Studios
+Foundry: 	https://youworkforthem.com/designer/527/set-sail-studios
+Copyright:	Copyright (c) 2022 by Set Sail Studios LTD. All rights reserved.
+Version: 	18
+Created:	April 02, 2026
+License: 	https://www.youworkforthem.com/font-license 
+License: 	The WebFont(s) listed in this document must follow the YouWorkForThem
+			WebFont license rules. All other parties are strictly restricted 
+			from using the WebFonts(s) listed without a purchased license. 
+			All details above must always remain unaltered and visible in your CSS.
+*/
+
+@font-face {
+	font-family: 'AtomicMarker';
+	src: url('atomic-marker-regular.woff2') format('woff2'),
+	     url('atomic-marker-regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

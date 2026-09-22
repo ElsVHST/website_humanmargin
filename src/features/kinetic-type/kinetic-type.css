@@ -1,0 +1,27 @@
+/**
+ * kinetic-type.css
+ * Eigen attribuut-selector (geen generieke klassennaam). Knoppen via
+ * CSS-variabelen: --kt-color-rgb (basiskleur als "r g b"-triplet, alpha komt
+ * van --kt-b) en --kt-opsz (optische grootte-as, als het font die heeft).
+ *
+ * De JS zet per frame --kt-w / --kt-wd / --kt-b op elk [data-kinetic-type]-element.
+ * De startwaarden hieronder gelden vóór de eerste meting en als fallback zonder JS.
+ */
+
+[data-kinetic-type] {
+	--kt-w: 300;
+	--kt-wd: 100;
+	--kt-b: 0.4;
+	--kt-opsz: 96;
+	--kt-color-rgb: 17 16 16;
+
+	font-variant-ligatures: none;
+	font-variation-settings:
+		"opsz" var(--kt-opsz),
+		"wdth" var(--kt-wd),
+		"wght" var(--kt-w);
+	color: rgb(var(--kt-color-rgb) / var(--kt-b));
+	/* Alleen kleur krijgt een CSS-transition: wght/wdth worden al elk frame
+	   geïnterpoleerd (smoothstep in de JS) en zouden dubbel vertragen. */
+	transition: color 0.3s;
+}
