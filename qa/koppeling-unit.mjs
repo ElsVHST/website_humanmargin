@@ -8,7 +8,7 @@
  *
  *   node qa/koppeling-unit.mjs
  */
-import { FOTO_MAX_BYTES, FOTO_MAX_ZIJDE, FOTO_TYPEN, MAX_OPEN_VOORSTELLEN, veiligPad, veiligeSlug } from "../src/lib/koppeling/paden.mjs";
+import { FOTO_MAX_BYTES, FOTO_MAX_ZIJDE, FOTO_TYPEN, MAX_OPEN_VOORSTELLEN, veiligPad, veiligeSlug, vervangInTekst } from "../src/lib/koppeling/paden.mjs";
 
 const uitslagen = [];
 const meld = (naam, ok, detail) => {
@@ -56,7 +56,7 @@ meld("AC-V2 alles buiten content en public/media wordt geweigerd", geweigerd.len
 const goedeSlugs = ["home", "over-mij", "workshop-12-november", "ab"];
 // "Home" en "main" horen hier niet bij: hoofdletters worden gewoon kleine letters, en "main" is
 // een geldige paginanaam die nooit als taknaam gebruikt wordt.
-const fouteSlugs = ["", "a", "over mij", "../home", "home.json", "héél-lang", "x".repeat(61), "refs/heads/main", "home/../..", "voorstel/x"];
+const fouteSlugs = ["", "a", "over mij", "../home", "home.json", "héél-lang", "x".repeat(61), "refs/heads/main", "home/../..", "voorstel/x", "---", "-home", "home-", "--"];
 meld(
   "AC-V1 gewone paginanamen mogen",
   goedeSlugs.every((s) => veiligeSlug(s) === s.toLowerCase()),
@@ -71,12 +71,43 @@ meld("AC-S3 alleen JPEG, PNG en WebP staan op de lijst", FOTO_TYPEN.length === 3
 meld("AC-S3 de grenzen staan op 15 MB en 2400 px", FOTO_MAX_BYTES === 15 * 1024 * 1024 && FOTO_MAX_ZIJDE === 2400, `${FOTO_MAX_BYTES / 1024 / 1024} MB · ${FOTO_MAX_ZIJDE} px`);
 meld("AC-V6 hoogstens vijf voorstellen tegelijk", MAX_OPEN_VOORSTELLEN === 5, String(MAX_OPEN_VOORSTELLEN));
 
+/* ── Vervangen raakt alleen tekst (gevonden door de beta-tester, 22-09) ──────────────────── */
+{
+  const pagina = {
+    slug: "proef-markeerstift",
+    titel: "Iets over de markeerstift",
+    secties: [
+      {
+        id: "markeerstift-sectie",
+        type: "tekst",
+        bouwstenen: [
+          { type: "alinea", tekst: "De markeerstift is een markeerstift." },
+          { type: "foto", beeld: "ai-act-met-markeerstift" },
+          { type: "knop", tekst: "Meer over de markeerstift", doel: "/markeerstift/" },
+        ],
+      },
+    ],
+  };
+  const teller = { n: 0 };
+  const na = vervangInTekst(pagina, "markeerstift", "stift", teller);
+  const alinea = na.secties[0].bouwstenen[0].tekst;
+  const beeld = na.secties[0].bouwstenen[1].beeld;
+  const doel = na.secties[0].bouwstenen[2].doel;
+  const sectieId = na.secties[0].id;
+  const titel = na.titel;
+  meld(
+    "een tekstwijziging raakt alleen tekst, niet de verwijzingen",
+    alinea === "De stift is een stift." && titel === "Iets over de stift" && beeld === "ai-act-met-markeerstift" && doel === "/markeerstift/" && sectieId === "markeerstift-sectie" && na.slug === "proef-markeerstift",
+    `alinea "${alinea}" · beeld ${beeld} · doel ${doel} · sectie ${sectieId} · slug ${na.slug} · ${teller.n} vervangingen`,
+  );
+}
+
 /* ── De grens staat er maar één keer ─────────────────────────────────────────────────────── */
 {
   const { readFileSync } = await import("node:fs");
   const bron = readFileSync("src/lib/koppeling/voorstellen.ts", "utf8");
-  const eigenRegex = /content\\\/\[/.test(bron) || /startsWith\("public\/media/.test(bron);
-  meld("de padgrens staat niet een tweede keer in de tools", !eigenRegex, eigenRegex ? "voorstellen.ts heeft een eigen kopie van de regel" : "één bron: paden.mjs");
+  const eigenRegex = /content\\\/\[/.test(bron) || /startsWith\("public\/media/.test(bron) || /function vervangDiep/.test(bron);
+  meld("de grenzen staan niet een tweede keer in de tools", !eigenRegex, eigenRegex ? "voorstellen.ts heeft een eigen kopie van een regel" : "één bron: paden.mjs");
 }
 
 const mislukt = uitslagen.filter((u) => !u).length;

@@ -14,7 +14,49 @@ export const dynamic = "force-dynamic";
 const fout = (melding: string, status = 400) =>
   new Response(`${melding}\n`, { status, headers: { "content-type": "text/plain; charset=utf-8" } });
 
-export function GET(request: Request) {
+/**
+ * Mag de code naar dit adres terug? (AC-T2, gevonden door de beta-tester 22-09.)
+ *
+ * Zonder deze vraag accepteert de inlogstap élk https-adres: iemand kan dan het client_id van
+ * ChatGPT gebruiken en de code bij zichzelf laten landen.
+ *
+ * Is het client_id een https-adres (Client ID Metadata Document), dan halen we dat document op en
+ * moet de redirect erin staan. Lukt ophalen niet, dan geldt de regel dat de redirect op dezelfde
+ * host moet staan als het client_id zelf — dat is wat CIMD sowieso vereist. Is het client_id geen
+ * adres (vaste inloggegevens), dan telt de lijst uit `OAUTH_TOEGESTANE_REDIRECTS`.
+ */
+async function magHierheen(clientId: string, doel: URL): Promise<boolean> {
+  if (doel.hostname === "localhost" || doel.hostname === "127.0.0.1") return true;
+
+  let client: URL | null = null;
+  try {
+    const u = new URL(clientId);
+    if (u.protocol === "https:") client = u;
+  } catch {
+    /* geen adres: vaste inloggegevens */
+  }
+
+  if (client) {
+    try {
+      const r = await fetch(client.toString(), { headers: { accept: "application/json" }, signal: AbortSignal.timeout(3000) });
+      if (r.ok) {
+        const doc = (await r.json()) as { redirect_uris?: string[] };
+        if (Array.isArray(doc.redirect_uris)) return doc.redirect_uris.includes(doel.toString());
+      }
+    } catch {
+      /* niet op te halen: dan de hostregel hieronder */
+    }
+    return doel.hostname === client.hostname;
+  }
+
+  const toegestaan = (process.env.OAUTH_TOEGESTANE_REDIRECTS ?? "https://chatgpt.com/,https://chat.openai.com/")
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+  return toegestaan.some((voorvoegsel) => doel.toString().startsWith(voorvoegsel));
+}
+
+export async function GET(request: Request) {
   const basis = publiekeBasis(request);
   const v = new URL(request.url).searchParams;
   const clientId = v.get("client_id") ?? "";
@@ -36,6 +78,9 @@ export function GET(request: Request) {
   // ergens anders te laten landen.
   const lokaal = doel.hostname === "localhost" || doel.hostname === "127.0.0.1";
   if (doel.protocol !== "https:" && !lokaal) return fout("redirect_uri moet https zijn.");
+  if (!(await magHierheen(clientId, doel))) {
+    return fout("Deze redirect_uri hoort niet bij deze client.", 403);
+  }
 
   const github = process.env.GITHUB_APP_CLIENT_ID;
   if (!github) return fout("Deze site is nog niet aan GitHub gekoppeld.", 503);

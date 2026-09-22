@@ -32,8 +32,10 @@ function geheim(): Buffer {
   const s = process.env.KOPPELING_TOKEN_GEHEIM;
   if (!s || s.length < 24) {
     // Zonder geheim kan er niets ondertekend worden. Een willekeurig geheim per proces zou tokens
-    // stilletjes ongeldig maken bij elke herstart; dan liever meteen een duidelijke fout.
-    throw new Error("KOPPELING_TOKEN_GEHEIM ontbreekt of is te kort (minstens 24 tekens)");
+    // stilletjes ongeldig maken bij elke herstart; dan liever meteen een duidelijke fout. De naam
+    // van de instelling staat in de log, niet in wat Els te zien krijgt.
+    console.error("koppeling: KOPPELING_TOKEN_GEHEIM ontbreekt of is korter dan 24 tekens");
+    throw new Error("Deze site is nog niet klaar om aangepast te worden. Laat Lars of Chris de koppeling afmaken.");
   }
   return Buffer.from(s, "utf8");
 }

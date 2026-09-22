@@ -57,6 +57,17 @@ function tekstUitSectie(s: Sectie): string[] {
   return regels;
 }
 
+/** De kop van een pagina: bovenaan, anders die van de eerste sectie, anders de titel. */
+function kopVan(p: Pagina): string {
+  const eigen = (p as unknown as { kop?: string }).kop;
+  if (eigen) return eigen;
+  for (const s of p.secties) {
+    const k = (s as unknown as { kop?: string }).kop;
+    if (k) return k;
+  }
+  return p.titel.split("|")[0].trim();
+}
+
 export function siteOverzicht(): string {
   const site = leesSite();
   const paginas = leesPaginas();
@@ -64,7 +75,7 @@ export function siteOverzicht(): string {
     `De site van ${site.naam}. Gepubliceerd te zien op: ${publicatieAdres()}`,
     "",
     `${paginas.length} pagina's:`,
-    ...paginas.map((p) => `- ${p.slug} (${paginaPad(p.slug)}) — ${p.kop}; secties: ${p.secties.map((s) => s.id).join(", ")}`),
+    ...paginas.map((p) => `- ${p.slug} (${paginaPad(p.slug)}) — ${kopVan(p)}; secties: ${p.secties.map((s) => s.id).join(", ")}`),
     "",
     "Wat je kunt wijzigen: alle tekst, prijzen en lijsten op deze pagina's, plus foto's.",
     "Wat niet: de opmaak, de kleuren en de opbouw van de site.",
@@ -82,5 +93,5 @@ export function paginaOverzicht(slug: string): string {
       .join(", ");
     return `Die pagina ken ik niet. Dit zijn de pagina's: ${namen}.`;
   }
-  return [`Pagina "${p.slug}" — ${p.kop}`, `Adres: ${paginaPad(p.slug)}`, `Titel in de browser: ${p.titel}`, `Beschrijving: ${p.beschrijving}`, ...p.secties.flatMap(tekstUitSectie)].join("\n");
+  return [`Pagina "${p.slug}" — ${kopVan(p)}`, `Adres: ${paginaPad(p.slug)}`, `Titel in de browser: ${p.titel}`, `Beschrijving: ${p.beschrijving}`, ...p.secties.flatMap(tekstUitSectie)].join("\n");
 }

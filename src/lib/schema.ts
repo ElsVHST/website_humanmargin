@@ -13,7 +13,10 @@ z.config(z.locales.nl());
 
 const tekst = z.string().trim().min(1, { error: "Dit veld mag niet leeg zijn." });
 const korteTekst = (max: number) => tekst.max(max, { error: `Maximaal ${max} tekens.` });
-export const slugPatroon = /^[a-z0-9-]{2,60}$/;
+// Eén bron voor wat een paginanaam mag zijn: hetzelfde patroon dat de ChatGPT-koppeling gebruikt.
+// Relatief, niet via de @-alias: dit bestand wordt ook door de controlescripts met kale Node geladen.
+export { slugPatroon } from "./koppeling/paden.mjs";
+import { slugPatroon } from "./koppeling/paden.mjs";
 const slug = z.string().regex(slugPatroon, { error: "Alleen kleine letters, cijfers en streepjes (2–60 tekens)." });
 const beeldId = z.string().regex(/^[a-z0-9-]{2,80}$/, { error: "Verwijs naar een beeld uit content/media.json (id)." });
 

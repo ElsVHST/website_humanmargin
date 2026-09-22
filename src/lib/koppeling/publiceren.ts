@@ -1,6 +1,6 @@
 import "server-only";
 import * as gh from "@/lib/koppeling/github";
-import { openVoorstellen, veiligPad } from "@/lib/koppeling/voorstellen";
+import { openVoorstellen, veiligPad, VOORSTEL_VOORVOEGSEL } from "@/lib/koppeling/voorstellen";
 
 /*
  * Publiceren en terugdraaien (AC-S4, AC-S5, AC-V3).
@@ -23,16 +23,16 @@ export async function publiceer(takRuw?: string): Promise<{ tak: string; commit:
   if (tak && !tak.startsWith("voorstel/")) tak = `voorstel/${tak}`;
   if (!tak) {
     if (open.length === 0) throw new Error("Er staan geen voorstellen open om te publiceren.");
-    if (open.length > 1) throw new Error(`Er staan ${open.length} voorstellen open. Welke bedoel je?\n${open.map((t) => `- ${t.slice(10)}`).join("\n")}`);
+    if (open.length > 1) throw new Error(`Er staan ${open.length} voorstellen open. Welke bedoel je?\n${open.map((t) => `- ${t.slice(VOORSTEL_VOORVOEGSEL.length)}`).join("\n")}`);
     tak = open[0];
   }
-  if (!open.includes(tak)) throw new Error(`Dat voorstel ken ik niet (meer). Open voorstellen: ${open.map((t) => t.slice(10)).join(", ") || "geen"}.`);
+  if (!open.includes(tak)) throw new Error(`Dat voorstel ken ik niet (meer). Open voorstellen: ${open.map((t) => t.slice(VOORSTEL_VOORVOEGSEL.length)).join(", ") || "geen"}.`);
 
   // Pas samenvoegen als de voorbeeldversie echt gebouwd is (AC-V3): geen link = geen publicatie.
   const link = await gh.voorbeeldlink(tak);
   if (!link) throw new Error("De voorbeeldversie is nog niet klaar. Wacht even tot de voorbeeldlink er is, en zeg dan opnieuw publiceer.");
 
-  const commit = await gh.voegSamen(tak, gh.publicatietak(), `publiceert ${tak.slice(10)}`);
+  const commit = await gh.voegSamen(tak, gh.publicatietak(), `publiceert ${tak.slice(VOORSTEL_VOORVOEGSEL.length)}`);
   await gh.verwijderTak(tak);
   return { tak, commit, adres: publicatieAdres() };
 }

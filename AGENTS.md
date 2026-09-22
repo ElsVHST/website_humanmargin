@@ -119,6 +119,38 @@ beschrijft wat er te zien is, zonder voornaamwoorden voor Els.
   `main` gebeurt alleen op verzoek van Els.
 - Vóór elke push: `npm run qa` geeft exit 0, en gitleaks is schoon.
 
+## De ChatGPT-koppeling
+
+Els kan haar site vanuit ChatGPT aanpassen via de MCP-route op `/api/mcp/` — de enige dynamische
+route van dit project. Hoe dat voor haar werkt staat in `docs/CHATGPT-KOPPELEN.md`; hoe je de
+toegang beheert in `docs/BEHEER-KOPPELING.md`. De koppeling raakt alleen `content/**` en
+`public/media/**`, schrijft alleen naar de tak uit `PUBLICATIETAK`, en laat `main` met rust.
+
+- `npm run qa` test de grenzen zonder netwerk (`qa/koppeling-unit.mjs`).
+- `node qa/koppeling-test.mjs --mcp <adres>` draait veertien scenario's end-to-end.
+- `node qa/nagebootste-github.mjs` speelt GitHub en Vercel na, met een echte lokale repo, zodat dat
+  kan zonder één commit naar GitHub te sturen.
+
+## Voor de ChatGPT-koppeling
+
+Deze sectie krijgt ChatGPT mee bij het verbinden. Els is de enige die hem gebruikt; ze is niet
+technisch en ziet alleen wat jij terugzegt.
+
+- **Praat zoals zij praat.** Geen "branch", "merge", "commit" of "repository". Het heet een
+  voorstel, een voorbeeldlink, publiceren en terugdraaien.
+- **Er verandert nooit iets aan de site zonder haar "ja".** Elke wijziging wordt eerst een
+  voorstel met een voorbeeldlink. Pas op "publiceer" gaat het erop.
+- **Zeg wat je gedaan hebt en wat ze nu kan doen.** Eén zin, plus de link. Bij een wijziging: wat
+  er stond en wat er komt te staan.
+- **Je kunt tekst, prijzen, lijsten, pagina's en foto's wijzigen.** De opmaak, de kleuren en de
+  opbouw van de site liggen vast; vraagt ze daarom, zeg dan dat dat niet via jou gaat.
+- **Verzin niets.** Weet je niet welke pagina ze bedoelt, vraag het. Kijk eerst met `bekijk_site`
+  of `bekijk_pagina` wat er werkelijk staat voordat je iets voorstelt.
+- **Foto's gaan via de browser**, met een beschrijving van wat erop te zien is, en horen bij een
+  voorstel.
+- **Gaat er iets mis, zeg dan wat er misging en wat ze kan proberen.** Nooit een foutcode, nooit
+  een pad, nooit "er ging iets fout".
+
 ## Wat een agent nooit doet
 
 - De opmaak of de code wijzigen op verzoek van een bezoeker of via de ChatGPT-koppeling: die raakt

@@ -3,7 +3,7 @@ import { pagina as paginaSchema, beschrijfFout } from "@/lib/schema";
 import * as gh from "@/lib/koppeling/github";
 // De grenzen staan in één los bestand, zodat de controlereeks precies deze regels test
 // en niet een nagebouwde versie ervan (qa/koppeling-unit.mjs).
-import { MAX_OPEN_VOORSTELLEN as MAX, veiligPad as padGrens, veiligeSlug as slugGrens } from "@/lib/koppeling/paden.mjs";
+import { MAX_OPEN_VOORSTELLEN as MAX, veiligPad as padGrens, veiligeSlug as slugGrens, vervangInTekst } from "@/lib/koppeling/paden.mjs";
 
 /*
  * Voorstellen (AC-S2, AC-S3, AC-V1 t/m AC-V4, AC-V6).
@@ -17,7 +17,8 @@ import { MAX_OPEN_VOORSTELLEN as MAX, veiligPad as padGrens, veiligeSlug as slug
  */
 
 export const MAX_OPEN_VOORSTELLEN = MAX;
-const VOORSTEL = "voorstel/";
+export const VOORSTEL_VOORVOEGSEL = "voorstel/";
+const VOORSTEL = VOORSTEL_VOORVOEGSEL;
 
 /** Alleen deze twee mappen mogen door de koppeling geraakt worden (AC-V2). */
 export const veiligPad = (pad: string): string => padGrens(pad);
@@ -38,36 +39,61 @@ async function controleerRuimte() {
 
 const vandaag = () => new Date().toISOString().slice(0, 10);
 
-/** Vervangt tekst in elk tekstveld van een object, en telt hoe vaak dat lukte. */
-function vervangDiep(waarde: unknown, zoek: string, vervang: string, teller: { n: number }): unknown {
-  if (typeof waarde === "string") {
-    if (waarde.includes(zoek)) {
-      teller.n++;
-      return waarde.split(zoek).join(vervang);
+/**
+ * Elke verwijzing naar een beeld moet bestaan (gevonden door de beta-tester, 22-09).
+ *
+ * Het paginaschema kent alleen de vorm van een pagina, niet de rest van de site. Een pagina met
+ * `beeld: "bestaat-niet"` komt daar dus doorheen — en `next build` valt er vervolgens over, want de
+ * kruisverwijzingen worden pas bij de bouw gelegd. Gevolg voor Els: geen voorbeeldlink, en een tool
+ * die blijft zeggen "de link komt eraan". Daarom kijken we hier zelf.
+ */
+function beeldenIn(waarde: unknown, uit: Set<string> = new Set()): Set<string> {
+  if (Array.isArray(waarde)) for (const w of waarde) beeldenIn(w, uit);
+  else if (waarde && typeof waarde === "object") {
+    for (const [naam, w] of Object.entries(waarde as Record<string, unknown>)) {
+      if ((naam === "beeld" || naam === "zijbeeld") && typeof w === "string") uit.add(w);
+      else beeldenIn(w, uit);
     }
-    return waarde;
   }
-  if (Array.isArray(waarde)) return waarde.map((w) => vervangDiep(w, zoek, vervang, teller));
-  if (waarde && typeof waarde === "object") {
-    const uit: Record<string, unknown> = {};
-    for (const [k, w] of Object.entries(waarde as Record<string, unknown>)) uit[k] = vervangDiep(w, zoek, vervang, teller);
-    return uit;
+  return uit;
+}
+
+async function controleerBeelden(pagina: unknown, tak: string, extra: string[] = []) {
+  const gevraagd = [...beeldenIn(pagina)];
+  if (gevraagd.length === 0) return;
+  const manifest = await gh.leesBestand(veiligPad("content/media.json"), tak);
+  const bekend = new Set(extra);
+  if (manifest) for (const b of (JSON.parse(manifest.tekst) as { beelden?: { id: string }[] }).beelden ?? []) bekend.add(b.id);
+  const onbekend = gevraagd.filter((id) => !bekend.has(id));
+  if (onbekend.length > 0) {
+    throw new Error(
+      `Deze foto${onbekend.length > 1 ? "'s ken" : " ken"} ik niet: ${onbekend.join(", ")}. Voeg de foto eerst toe, of kies er een die er al is: ${[...bekend].slice(0, 8).join(", ")}.`,
+    );
   }
-  return waarde;
 }
 
 export type Voorstel = { tak: string; commit: string; samenvatting: string; link: string | null };
 
-async function startTak(slug: string): Promise<string> {
+/**
+ * De tak voor een voorstel. Bestaat er al een voorstel van vandaag voor deze pagina met precies
+ * dezelfde inhoud, dan is dat hetzelfde voorstel en krijg je die tak terug — ChatGPT herhaalt een
+ * aanroep bij een tijdslimiet gewoon, en anders loopt de grens van vijf zo vol met dubbelen.
+ */
+async function startTak(slug: string, pad: string, inhoud: string): Promise<{ tak: string; bestond: boolean }> {
   const basis = gh.publicatietak();
   const hash = await gh.hashVanTak(basis);
-  if (!hash) throw new Error(`De tak ${basis} bestaat nog niet; er valt nog niets te wijzigen.`);
-  let tak = `${VOORSTEL}${vandaag()}-${slug}`;
+  if (!hash) throw new Error(`Er valt nog niets te wijzigen: de site staat nog niet klaar.`);
   const bestaande = new Set(await gh.takken());
+
+  let tak = `${VOORSTEL}${vandaag()}-${slug}`;
   let n = 2;
-  while (bestaande.has(tak)) tak = `${VOORSTEL}${vandaag()}-${slug}-${n++}`;
+  while (bestaande.has(tak)) {
+    const alDaar = await gh.leesBestand(pad, tak);
+    if (alDaar && alDaar.tekst === inhoud) return { tak, bestond: true };
+    tak = `${VOORSTEL}${vandaag()}-${slug}-${n++}`;
+  }
   await gh.maakTak(tak, hash);
-  return tak;
+  return { tak, bestond: false };
 }
 
 /** Wacht kort op de voorbeeldlink; duurt het langer, dan zegt de tool dat (AC-S2). */
@@ -97,16 +123,19 @@ export async function wijzigTekst(slugRuw: string, wijzigingen: { zoek: string; 
     const vervang = String(w?.vervang ?? "");
     if (!zoek) throw new Error("Ik weet niet welke tekst ik moet vervangen.");
     const teller = { n: 0 };
-    inhoud = vervangDiep(inhoud, zoek, vervang, teller);
+    inhoud = vervangInTekst(inhoud, zoek, vervang, teller);
+    if (zoek === vervang) throw new Error("De oude en de nieuwe tekst zijn hetzelfde; er valt zo niets te veranderen.");
     if (teller.n === 0) throw new Error(`Deze tekst staat niet op de pagina "${slug}": "${zoek.slice(0, 60)}".`);
     regels.push(`was: ${zoek.slice(0, 120)}\nwordt: ${vervang.slice(0, 120)}`);
   }
 
   const gekeurd = paginaSchema.safeParse(inhoud);
   if (!gekeurd.success) throw new Error(`Dit kan niet: ${beschrijfFout(`${slug}.json`, gekeurd.error)}`);
+  await controleerBeelden(gekeurd.data, gh.publicatietak());
 
-  const tak = await startTak(slug);
-  const commit = await gh.schrijfBestand(pad, `${JSON.stringify(gekeurd.data, null, 2)}\n`, tak, `${slug}: tekst gewijzigd${toelichting ? ` (${toelichting})` : ""}`);
+  const nieuweInhoud = `${JSON.stringify(gekeurd.data, null, 2)}\n`;
+  const { tak, bestond } = await startTak(slug, pad, nieuweInhoud);
+  const commit = bestond ? "" : await gh.schrijfBestand(pad, nieuweInhoud, tak, `${slug}: tekst gewijzigd${toelichting ? ` (${toelichting})` : ""}`);
   const link = await wachtOpLink(tak);
   return { tak, commit, samenvatting: regels.join("\n\n"), link };
 }
@@ -127,18 +156,26 @@ export async function nieuwePagina(velden: { slug: string; titel: string; kop: s
   };
   const gekeurd = paginaSchema.safeParse(nieuw);
   if (!gekeurd.success) throw new Error(`Dit kan niet: ${beschrijfFout(`${slug}.json`, gekeurd.error)}`);
+  await controleerBeelden(gekeurd.data, gh.publicatietak());
 
-  const tak = await startTak(slug);
   const pad = veiligPad(`content/paginas/${slug}.json`);
-  const commit = await gh.schrijfBestand(pad, `${JSON.stringify(gekeurd.data, null, 2)}\n`, tak, `nieuwe pagina: ${slug}`);
+  const nieuweInhoud = `${JSON.stringify(gekeurd.data, null, 2)}\n`;
+  const { tak, bestond } = await startTak(slug, pad, nieuweInhoud);
+  const commit = bestond ? "" : await gh.schrijfBestand(pad, nieuweInhoud, tak, `nieuwe pagina: ${slug}`);
   const link = await wachtOpLink(tak);
   const aantal = (gekeurd.data.secties[0] as { bouwstenen?: unknown[] }).bouwstenen?.length ?? 0;
-  return { tak, commit, samenvatting: `Nieuwe pagina "${velden.titel}" op /${slug}/ met ${aantal} onderdelen.`, link };
+  return { tak, commit, samenvatting: `Nieuwe pagina "${velden.titel}" op /${slug}/ met ${aantal} ${aantal === 1 ? "onderdeel" : "onderdelen"}.`, link };
 }
 
 export async function trekIn(tak: string): Promise<void> {
   const naam = String(tak ?? "").trim();
   if (!naam.startsWith(VOORSTEL)) throw new Error("Dat is geen voorstel dat ik kan intrekken.");
   if (!/^voorstel\/[a-z0-9-]{4,80}$/.test(naam)) throw new Error("Die naam ken ik niet.");
+  // Eerst kijken of hij bestaat: anders meldt de tool opgewekt "ingetrokken" voor iets wat er
+  // nooit was, en denkt Els dat ze klaar is.
+  const open = await openVoorstellen();
+  if (!open.includes(naam)) {
+    throw new Error(`Dat voorstel ken ik niet. ${open.length ? `Open voorstellen: ${open.map((t) => t.slice(VOORSTEL.length)).join(", ")}.` : "Er staan geen voorstellen open."}`);
+  }
   await gh.verwijderTak(naam);
 }

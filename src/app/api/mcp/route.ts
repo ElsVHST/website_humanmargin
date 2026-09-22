@@ -4,6 +4,7 @@ import { mcpAdres, publiekeBasis } from "@/lib/koppeling/basis";
 import { serverinstructies } from "@/lib/koppeling/instructies";
 import { siteOverzicht, paginaOverzicht } from "@/lib/koppeling/lezen";
 import { isTesttoken, leesToken } from "@/lib/koppeling/toegang";
+import { tempoControle } from "@/lib/koppeling/tempo";
 import { nieuwePagina, openVoorstellen, trekIn, wijzigTekst } from "@/lib/koppeling/voorstellen";
 import { voorbeeldlink } from "@/lib/koppeling/github";
 import { voegFotoToe } from "@/lib/koppeling/fotos";
@@ -197,6 +198,7 @@ const handler = createMcpHandler(
  * 2. het testtoken, dat alleen buiten productie bestaat (AC-T5).
  */
 const controleer = async (request: Request, token?: string) => {
+  // De reden van een 401 hoort te kloppen: "geen token" is iets anders dan "verlopen".
   const bron = mcpAdres(publiekeBasis(request));
   if (isTesttoken(token)) {
     return { token: token as string, scopes: ["site:lezen", "site:voorstellen", "site:publiceren"], clientId: "controlereeks", extra: { gebruiker: "controlereeks" } };
@@ -216,4 +218,46 @@ const beveiligd = withMcpAuth(handler, controleer, {
   resourceMetadataPath: "/.well-known/oauth-protected-resource",
 });
 
-export { beveiligd as GET, beveiligd as POST, beveiligd as DELETE };
+/**
+ * Vóór de toegangscontrole: niet te snel achter elkaar (AC-V6). Dertig aanroepen per minuut per
+ * token is ruim voor iemand die zijn site aanpast; daarboven is het een lus of een poging.
+ */
+async function metRem(request: Request): Promise<Response> {
+  const token = request.headers.get("authorization") ?? "anoniem";
+  const oordeel = tempoControle(token);
+  if (!oordeel.mag) {
+    return Response.json(
+      { jsonrpc: "2.0", error: { code: -32029, message: `Even rustig aan: probeer het over ${oordeel.wachtSeconden} seconden opnieuw.` }, id: null },
+      { status: 429, headers: { "retry-after": String(oordeel.wachtSeconden) } },
+    );
+  }
+  /*
+   * Een 401 hoort te zeggen wat er aan de hand is. De standaardtekst is altijd "No authorization
+   * provided", ook bij een verlopen token — en dan zoekt Els in de verkeerde hoek.
+   */
+  const kop = request.headers.get("authorization");
+  if (kop && !isTesttoken(kop.replace(/^Bearer /i, ""))) {
+    const oordeel = leesToken(kop.replace(/^Bearer /i, ""), mcpAdres(publiekeBasis(request)));
+    if (!oordeel.geldig) {
+      const uitleg =
+        oordeel.reden === "token is verlopen"
+          ? "Je aanmelding is verlopen. Log opnieuw in vanuit ChatGPT."
+          : oordeel.reden === "deze gebruiker staat niet meer op de lijst"
+            ? "Dit account mag deze site niet meer beheren."
+            : "Deze aanmelding klopt niet. Log opnieuw in vanuit ChatGPT.";
+      return Response.json(
+        { error: "invalid_token", error_description: uitleg },
+        {
+          status: 401,
+          headers: {
+            "www-authenticate": `Bearer error="invalid_token", error_description="${uitleg}", resource_metadata="${publiekeBasis(request)}/.well-known/oauth-protected-resource"`,
+          },
+        },
+      );
+    }
+  }
+
+  return beveiligd(request);
+}
+
+export { metRem as GET, metRem as POST, metRem as DELETE };

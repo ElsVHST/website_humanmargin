@@ -28,6 +28,9 @@ export async function proefBouw({ naam, env = {}, poort, wijzig = async () => {}
     for (const pad of tijdelijkeBestanden) rmSync(pad, { force: true });
     rmSync(dist, { recursive: true, force: true });
   };
+  // Next schrijft bij elke bouw een `include`-regel voor zijn uitvoermap in tsconfig.json. Bij een
+  // proefbouw is dat rommel die anders in de repo belandt, dus dat bestand gaat altijd mee terug.
+  bewaar("tsconfig.json");
   await wijzig({ bewaar });
   const omgeving = { ...process.env, ...env, NEXT_DIST_DIR: dist };
   let server;

@@ -21,7 +21,7 @@ let tokenCache: { token: string; tot: number } | null = null;
 function appJwt(): string {
   const id = process.env.GITHUB_APP_ID;
   const sleutel = (process.env.GITHUB_APP_PRIVATE_KEY ?? "").replace(/\\n/g, "\n");
-  if (!id || !sleutel) throw new Error("De GitHub App is niet ingesteld (GITHUB_APP_ID of GITHUB_APP_PRIVATE_KEY ontbreekt).");
+  if (!id || !sleutel) throw new Error("Deze site is nog niet klaar om aangepast te worden. Laat Lars of Chris de koppeling afmaken.");
   const nu = Math.floor(Date.now() / 1000);
   const kop = Buffer.from(JSON.stringify({ alg: "RS256", typ: "JWT" })).toString("base64url");
   const inhoud = Buffer.from(JSON.stringify({ iat: nu - 60, exp: nu + 540, iss: id })).toString("base64url");
@@ -36,12 +36,15 @@ async function schrijfToken(): Promise<string> {
   if (tokenCache && tokenCache.tot > Date.now() + 60000) return tokenCache.token;
 
   const installatie = process.env.GITHUB_APP_INSTALLATIE_ID;
-  if (!installatie) throw new Error("De GitHub App is nog niet op de repo geïnstalleerd (GITHUB_APP_INSTALLATIE_ID ontbreekt).");
+  if (!installatie) throw new Error("Deze site is nog niet klaar om aangepast te worden. Laat Lars of Chris de koppeling afmaken.");
   const r = await fetch(`${API()}/app/installations/${installatie}/access_tokens`, {
     method: "POST",
     headers: { authorization: `Bearer ${appJwt()}`, accept: "application/vnd.github+json" },
   });
-  if (!r.ok) throw new Error(`GitHub gaf geen schrijfrecht (${r.status}).`);
+  if (!r.ok) {
+    console.error("koppeling: geen installatietoken van GitHub,", r.status);
+    throw new Error("Ik mag op dit moment niet in de site schrijven. Laat Lars of Chris even kijken naar de toegang.");
+  }
   const uit = (await r.json()) as { token: string; expires_at: string };
   tokenCache = { token: uit.token, tot: new Date(uit.expires_at).getTime() };
   return uit.token;
@@ -61,9 +64,14 @@ async function vraag<T>(pad: string, opties: { methode?: string; lichaam?: unkno
   });
   if (r.status === 404 && opties.mag404) return null;
   if (!r.ok) {
+    // Wat de andere kant terugstuurt is niet voor Els bedoeld: daar zitten paden, commando's en
+    // soms koppen in. Zij krijgt één zin; de details gaan naar de log van de server.
     const tekst = await r.text();
-    // Nooit het token in een melding; alleen wat GitHub zelf zegt.
-    throw new Error(`GitHub antwoordde met ${r.status}: ${tekst.slice(0, 200)}`);
+    console.error("koppeling: GitHub antwoordde met", r.status, opties.methode ?? "GET", pad, tekst.slice(0, 300));
+    if (r.status === 401 || r.status === 403) throw new Error("Ik mag op dit moment niet in de site schrijven. Laat Lars of Chris even kijken naar de toegang.");
+    if (r.status === 404) throw new Error("Dat kan ik niet vinden in de site.");
+    if (r.status === 409 || r.status === 422) throw new Error("Dit lukt niet: er is ondertussen iets veranderd, of dit kan zo niet. Probeer het opnieuw, of vraag me eerst te kijken wat er staat.");
+    throw new Error("Het lukt even niet om bij de site te komen. Probeer het zo nog eens.");
   }
   if (r.status === 204) return null;
   return (await r.json()) as T;

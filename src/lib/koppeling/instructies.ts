@@ -10,7 +10,13 @@ import { join } from "node:path";
  * AGENTS.md gewijzigd, dan heeft de volgende bouw de nieuwe regels.
  */
 
-const KOPPEN = ["## Het contentcontract", "## De merkregels (brandbook)", "## Harde regels"];
+/*
+ * Wat ChatGPT meekrijgt is niet hetzelfde als wat een bouwer meekrijgt. De beta-tester merkte op
+ * 22-09 terecht op dat de oude selectie over git, gitleaks en .tsx-bestanden ging — instructies
+ * voor iemand die code schrijft, terwijl dit de klant is die haar tekst aanpast. Daarom heeft de
+ * koppeling een eigen sectie in AGENTS.md; de merkregels gaan mee omdat die over de inhoud gaan.
+ */
+const KOPPEN = ["## Voor de ChatGPT-koppeling", "## De merkregels (brandbook)"];
 
 let gelezen: string | null = null;
 

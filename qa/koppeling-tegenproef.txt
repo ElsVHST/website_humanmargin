@@ -1,7 +1,7 @@
 Tegenproef van het testprogramma van de koppeling.
 Vóór K1 bestaat de route nog niet; dan hoort dit programma 0 keer PASS te geven.
 
-Gedraaid op 2026-09-22 19:57 tegen http://localhost:4790/api/mcp
+Gedraaid op 2026-09-22 21:42 tegen http://localhost:1/api/mcp/
 
 FAIL  1. aanroep zonder token geeft 401 met een geldige metadata-URL
 FAIL  2. het testtoken werkt niet op een productieroute
@@ -16,5 +16,6 @@ FAIL  9. een voorstel dat het schema breekt wordt geweigerd, met de reden
 FAIL 10. <script> in een alinea staat als tekst op de voorbeeldlink
 FAIL 11. het zesde open voorstel wordt geweigerd
 FAIL 12. opruimen: 0 testtakken over en content ongewijzigd
+FAIL 13. main staat nog precies waar hij stond
 
-koppeling-test: FAIL (0/13)
+koppeling-test: FAIL (0/14)

@@ -68,7 +68,18 @@ const NIEUWE_TEKST = `Proefzin van de controlereeks ${new Date().toISOString().s
 let client;
 let demo = vlag("--demo");
 let voorstelTak;
+let fotoTak;
 const opgeruimd = [];
+
+/** Alles wat openstaat intrekken, zodat het volgende scenario ruimte heeft. */
+async function maakRuimte() {
+  for (let ronde = 0; ronde < 3; ronde++) {
+    const lijst = tekstUit(await client.roep("open_voorstellen"));
+    const namen = [...lijst.matchAll(/^- ([0-9a-z-]+)/gm)].map((x) => x[1]);
+    if (namen.length === 0) return;
+    for (const naam of namen) await client.roep("trek_voorstel_in", { tak: naam }, { verwachtFout: true });
+  }
+}
 
 /* ── 0. De hash van main, vóór alles (AC-V1) ─────────────────────────────────────────────── */
 const API = process.env.GITHUB_API_BASIS ?? "https://api.github.com";
@@ -232,6 +243,7 @@ if (!verbonden) {
     const link = /https?:\/\/\S+/.exec(antwoord)?.[0]?.replace(/[.,)]$/, "");
     const tak = takUit(antwoord);
     if (tak) opgeruimd.push(tak);
+    fotoTak = tak;
     let fotoGoed = "geen foto meegegeven (zet KOPPELING_TESTFOTO)";
     let fotoOk = true;
     if (foto) {
@@ -245,8 +257,12 @@ if (!verbonden) {
         const ruw = Buffer.from(JSON.parse(gecommit.tekst).content, "base64");
         const meta = await sharp(ruw).metadata();
         const gps = meta.exif ? /GPS/.test(ruw.subarray(0, 4096).toString("latin1")) : false;
-        fotoOk = Math.max(meta.width, meta.height) <= 2400 && !gps;
-        fotoGoed = `${meta.width}×${meta.height}, ${Math.round(ruw.length / 1024)} kB, EXIF ${meta.exif ? `${meta.exif.length} bytes` : "weg"}, GPS ${gps ? "AANWEZIG" : "weg"}`;
+        // Ook de lijst met beelden nameten: zonder regel daarin kan geen pagina naar de foto wijzen.
+        const lijst = await haal(`${process.env.GITHUB_API_BASIS ?? "https://api.github.com"}/repos/${process.env.KOPPELING_REPO ?? "ElsVHST/website_humanmargin"}/contents/content/media.json?ref=${encodeURIComponent(tak ?? "")}`);
+        const manifest = JSON.parse(Buffer.from(JSON.parse(lijst.tekst).content, "base64").toString("utf8"));
+        const regel = (manifest.beelden ?? []).find((b) => b.id === "proeffoto-controlereeks");
+        fotoOk = Math.max(meta.width, meta.height) <= 2400 && !gps && regel?.bestand === "/media/proeffoto-controlereeks.jpg";
+        fotoGoed = `${meta.width}×${meta.height}, ${Math.round(ruw.length / 1024)} kB, EXIF ${meta.exif ? `${meta.exif.length} bytes` : "weg"}, GPS ${gps ? "AANWEZIG" : "weg"}, lijst ${regel ? regel.bestand : "GEEN REGEL"}`;
       } catch (e) {
         fotoOk = false;
         fotoGoed = `kon de foto niet nameten: ${e.message}`;
@@ -273,13 +289,29 @@ if (!verbonden) {
   };
 
   await weigering(7, "een SVG wordt geweigerd", () =>
-    client.roep("voeg_foto_toe", { pagina: "manifest", alt: "Proef", bestand: { download_url: "http://localhost:1/x.svg", name: "x.svg", mime_type: "image/svg+xml" } }, { verwachtFout: true }),
+    client.roep("voeg_foto_toe", { pagina: "manifest", tak: fotoTak, alt: "Proef van de controlereeks", bestand: { download_url: "http://localhost:1/x.svg", name: "x.svg", mime_type: "image/svg+xml" } }, { verwachtFout: true }),
   );
   await weigering(8, "een poging op package.json wordt geweigerd", () =>
     client.roep("stel_wijziging_voor", { pagina: "../../package.json", wijzigingen: [{ zoek: "name", vervang: "gekaapt" }] }, { verwachtFout: true }),
   );
   await weigering(9, "een voorstel dat het schema breekt wordt geweigerd, met de reden", () =>
     client.roep("nieuwe_pagina", { slug: "proef-kapot", titel: "", kop: "", bouwstenen: [{ type: "onbekend", tekst: "x" }] }, { verwachtFout: true }),
+  );
+
+  await weigering(14, "een pagina met een foto die niet bestaat wordt geweigerd", () =>
+    client.roep(
+      "nieuwe_pagina",
+      {
+        slug: "proef-onbekende-foto",
+        titel: "Proefpagina onbekende foto",
+        kop: "Proef met een foto die niet bestaat",
+        bouwstenen: [
+          { type: "alinea", tekst: "Een alinea van de controlereeks, lang genoeg om te meten." },
+          { type: "foto", beeld: "bestaat-niet" },
+        ],
+      },
+      { verwachtFout: true },
+    ),
   );
 
   /* ── 10. Script in een alinea ──────────────────────────────────────────────────────────── */
@@ -314,6 +346,78 @@ if (!verbonden) {
     return laatste;
   });
 
+  /* ── 15 t/m 22: wat de beta-tester vond, blijft gerepareerd ────────────────────────────── */
+  // Eerst opruimen: met vijf openstaande voorstellen meet elk scenario hieronder alleen de grens.
+  await maakRuimte();
+  await weigering(15, "een foto zonder voorstel wordt geweigerd", () =>
+    client.roep("voeg_foto_toe", { alt: "Proeffoto van de controlereeks", bestand: { download_url: process.env.KOPPELING_TESTFOTO ?? "http://localhost:1/x.jpg", name: "los.jpg", mime_type: "image/jpeg" } }, { verwachtFout: true }),
+  );
+
+  await weigering(16, "een voorstel intrekken dat niet bestaat wordt geweigerd", () =>
+    client.roep("trek_voorstel_in", { tak: "2026-01-01-bestaat-niet" }, { verwachtFout: true }),
+  );
+
+  await weigering(17, "een wijziging waarbij oud en nieuw gelijk zijn wordt geweigerd", () =>
+    client.roep("stel_wijziging_voor", { pagina: "manifest", wijzigingen: [{ zoek: "de", vervang: "de" }] }, { verwachtFout: true }),
+  );
+
+  try {
+    const overzicht = tekstUit(await client.roep("bekijk_site"));
+    meld(18, "het overzicht bevat nergens \"undefined\"", !/undefined/.test(overzicht), overzicht.split("\n").slice(2, 4).join(" · ").slice(0, 120));
+  } catch (e) {
+    mislukt(18, "het overzicht bevat nergens \"undefined\"", e);
+  }
+
+  try {
+    // Een woord dat óók in een beeld-id voorkomt: dat id mag niet meeveranderen.
+    const paginaAanbod = tekstUit(await client.roep("bekijk_pagina", { slug: "aanbod" }));
+    const woord = /\[foto\] ([a-z0-9-]+)/.exec(paginaAanbod)?.[1]?.split("-").find((d) => d.length > 5);
+    if (!woord) {
+      meld(19, "een tekstwijziging laat beeld-ids met rust", true, "geen beeld met een lang woord in de naam; niets te verwarren");
+    } else {
+      const r = await client.roep("stel_wijziging_voor", { pagina: "aanbod", wijzigingen: [{ zoek: woord, vervang: `${woord}x` }] }, { verwachtFout: true });
+      const tak = takUit(tekstUit(r));
+      if (tak) opgeruimd.push(tak);
+      let idsOngemoeid = true;
+      if (tak) {
+        const bestand = await haal(`${API}/repos/${REPO}/contents/content/paginas/aanbod.json?ref=${encodeURIComponent(tak)}`);
+        const json = JSON.parse(Buffer.from(JSON.parse(bestand.tekst).content, "base64").toString("utf8"));
+        idsOngemoeid = !JSON.stringify(json).includes(`"beeld": "${woord}x`) && !JSON.stringify(json).includes(`${woord}x-`);
+      }
+      meld(19, "een tekstwijziging laat beeld-ids met rust", idsOngemoeid, `gezocht op "${woord}" · beeld-ids ${idsOngemoeid ? "ongemoeid" : "MEEVERANDERD"}`);
+    }
+  } catch (e) {
+    mislukt(19, "een tekstwijziging laat beeld-ids met rust", e);
+  }
+
+  try {
+    const eerste = await client.roep("nieuwe_pagina", { slug: "proef-tweemaal", titel: "Proef tweemaal", kop: "Proef tweemaal", bouwstenen: [{ type: "alinea", tekst: "Dezelfde alinea, twee keer ingediend, om te zien of er één tak komt." }] }, { verwachtFout: true });
+    const tweede = await client.roep("nieuwe_pagina", { slug: "proef-tweemaal", titel: "Proef tweemaal", kop: "Proef tweemaal", bouwstenen: [{ type: "alinea", tekst: "Dezelfde alinea, twee keer ingediend, om te zien of er één tak komt." }] }, { verwachtFout: true });
+    const t1 = takUit(tekstUit(eerste));
+    const t2 = takUit(tekstUit(tweede));
+    if (t1) opgeruimd.push(t1);
+    if (t2) opgeruimd.push(t2);
+    meld(20, "twee keer hetzelfde voorstel geeft één tak", Boolean(t1) && t1 === t2, `${t1 ?? "?"} en ${t2 ?? "?"}`);
+  } catch (e) {
+    mislukt(20, "twee keer hetzelfde voorstel geeft één tak", e);
+  }
+
+  try {
+    const metVreemdeHost = await fetch(`${new URL(MCP).origin}/.well-known/oauth-authorization-server`, { headers: { "x-forwarded-host": "aanvaller.example.com", "x-forwarded-proto": "https" } });
+    const j = await metVreemdeHost.json();
+    const schoon = !JSON.stringify(j).includes("aanvaller.example.com");
+    meld(21, "een vreemde host-kop verandert de metadata niet", schoon, `issuer ${j.issuer}`);
+  } catch (e) {
+    mislukt(21, "een vreemde host-kop verandert de metadata niet", e);
+  }
+
+  try {
+    const r = await fetch(`${new URL(MCP).origin}/api/oauth/authorize/?response_type=code&client_id=https%3A%2F%2Fchatgpt.com%2Fclient&redirect_uri=https%3A%2F%2Faanvaller.example.com%2Fpak&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&code_challenge_method=S256`, { redirect: "manual" });
+    meld(22, "een redirect_uri die niet bij de client hoort wordt geweigerd", r.status === 403 || r.status === 400, `status ${r.status}`);
+  } catch (e) {
+    mislukt(22, "een redirect_uri die niet bij de client hoort wordt geweigerd", e);
+  }
+
   /* ── 12. Opruimen ──────────────────────────────────────────────────────────────────────── */
   try {
     // Alles opruimen wat er nog openstaat, ongeacht hoe het heette: de namen uit de antwoorden
@@ -332,8 +436,31 @@ if (!verbonden) {
   }
 }
 
+/* ── 23. Te snel achter elkaar geeft 429 (AC-V6) ─────────────────────────────────────────── */
+if (verbonden) {
+  try {
+    const grens = Number(process.env.KOPPELING_MAX_PER_MINUUT ?? 30);
+    const antwoorden = await Promise.all(
+      Array.from({ length: grens + 5 }, () =>
+        fetch(MCP, {
+          method: "POST",
+          headers: { "content-type": "application/json", accept: "application/json, text/event-stream", authorization: "Bearer overbelasting-proef" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} }),
+        }).then((r) => r.status),
+      ),
+    );
+    const teveel = antwoorden.filter((s) => s === 429).length;
+    meld(23, "te snel achter elkaar geeft 429", teveel > 0, `${antwoorden.length} aanroepen · ${teveel} keer 429 · grens ${grens} per minuut`);
+  } catch (e) {
+    mislukt(23, "te snel achter elkaar geeft 429", e);
+  }
+}
+
 /* ── 13. main is nergens geraakt (AC-V1) ─────────────────────────────────────────────────── */
-{
+if (!verbonden) {
+  // Zonder verbinding is er niets gebeurd, dus zegt "main is niet geraakt" ook niets.
+  meld(13, "main staat nog precies waar hij stond", false, "niet gemeten: geen verbinding");
+} else {
   const mainAchteraf = await hashVanMain();
   meld(13, "main staat nog precies waar hij stond", Boolean(mainVooraf) && mainVooraf === mainAchteraf, `vooraf ${mainVooraf?.slice(0, 12) ?? "?"} · achteraf ${mainAchteraf?.slice(0, 12) ?? "?"}`);
 }

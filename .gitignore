@@ -22,3 +22,7 @@ qa/tmp/
 # Proefbouwen van de controlereeks
 .next-*
 .vercel
+
+# Het geheugen van onze eigen agents hoort niet in de repo van de klant.
+.claude/
+qa/beta-tester/
