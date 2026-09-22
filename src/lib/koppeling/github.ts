@@ -160,3 +160,10 @@ export async function verwijderBestand(pad: string, tak: string, boodschap: stri
   });
   return r?.commit?.sha ?? "";
 }
+
+/** De bestanden in een map op een tak (de mappenkant van de contents-API). */
+export async function lijstMap(pad: string, tak: string): Promise<string[]> {
+  const r = await vraag<{ name: string; type: string }[]>(`/repos/${repoNaam()}/contents/${pad}?ref=${encodeURIComponent(tak)}`, { mag404: true });
+  if (!Array.isArray(r)) return [];
+  return r.filter((x) => x.type === "file").map((x) => x.name);
+}

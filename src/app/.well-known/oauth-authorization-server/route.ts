@@ -30,7 +30,15 @@ export function GET(request: Request) {
       authorization_response_iss_parameter_supported: true,
       service_documentation: `${basis}/`,
     },
-    { headers: { "cache-control": "public, max-age=300", "access-control-allow-origin": "*" } },
+    {
+      headers: {
+        "cache-control": "public, max-age=300",
+        // Het antwoord hangt af van de host-kop; zonder dit kan een gedeelde cache het antwoord
+        // van de één aan de ander geven.
+        vary: "x-forwarded-host, host",
+        "access-control-allow-origin": "*",
+      },
+    },
   );
 }
 

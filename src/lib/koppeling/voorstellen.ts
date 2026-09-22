@@ -1,5 +1,5 @@
 import "server-only";
-import { pagina as paginaSchema, beschrijfFout } from "@/lib/schema";
+import { pagina as paginaSchema } from "@/lib/schema";
 import * as gh from "@/lib/koppeling/github";
 // De grenzen staan in één los bestand, zodat de controlereeks precies deze regels test
 // en niet een nagebouwde versie ervan (qa/koppeling-unit.mjs).
@@ -21,6 +21,31 @@ export const VOORSTEL_VOORVOEGSEL = "voorstel/";
 const VOORSTEL = VOORSTEL_VOORVOEGSEL;
 
 /** Alleen deze twee mappen mogen door de koppeling geraakt worden (AC-V2). */
+/**
+ * Een schemafout omzetten naar iets wat Els snapt: geen bestandsnaam, geen veldpad, geen Engels.
+ * AGENTS.md § "Voor de ChatGPT-koppeling" zegt: nooit een foutcode, nooit een pad.
+ */
+function inGewoneTaal(fout: { issues: { path: PropertyKey[]; message: string }[] }): string {
+  const woord: Record<string, string> = {
+    titel: "de titel in de browser",
+    beschrijving: "de beschrijving",
+    kop: "de kop",
+    tekst: "de tekst",
+    alt: "de beschrijving van de foto",
+    items: "de lijst",
+    doel: "waar de knop naartoe gaat",
+    beeld: "de foto",
+    type: "het soort onderdeel",
+    slug: "het adres van de pagina",
+  };
+  const regels = fout.issues.slice(0, 3).map((i) => {
+    const veld = [...i.path].reverse().find((d) => typeof d === "string" && woord[d as string]);
+    const naam = veld ? woord[veld as string] : "een van de velden";
+    return `${naam}: ${i.message.replace(/^Ongeldige invoer$/, "dit soort onderdeel ken ik niet")}`;
+  });
+  return `Dit kan zo niet: ${regels.join(" · ")}`;
+}
+
 export const veiligPad = (pad: string): string => padGrens(pad);
 export const veiligeSlug = (slug: string): string => slugGrens(slug);
 
@@ -37,7 +62,11 @@ async function controleerRuimte() {
   }
 }
 
-const vandaag = () => new Date().toISOString().slice(0, 10);
+// Lokale datum, niet UTC: om half één 's nachts heette een voorstel anders nog gisteren.
+const vandaag = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
 
 /**
  * Elke verwijzing naar een beeld moet bestaan (gevonden door de beta-tester, 22-09).
@@ -130,10 +159,14 @@ export async function wijzigTekst(slugRuw: string, wijzigingen: { zoek: string; 
   }
 
   const gekeurd = paginaSchema.safeParse(inhoud);
-  if (!gekeurd.success) throw new Error(`Dit kan niet: ${beschrijfFout(`${slug}.json`, gekeurd.error)}`);
+  if (!gekeurd.success) throw new Error(inGewoneTaal(gekeurd.error));
   await controleerBeelden(gekeurd.data, gh.publicatietak());
 
-  const nieuweInhoud = `${JSON.stringify(gekeurd.data, null, 2)}\n`;
+  // Keuren doen we op wat het schema ervan maakt, schrijven op wat er stond. Het schema vult
+  // tientallen standaardwaarden in (`logo: false`, `lijst: []`); zou je díé terugschrijven, dan
+  // zwelt een bestand na één zinswijziging met twintig regels die Els nooit heeft gevraagd, en
+  // wordt het verschil in de voorbeeldlink onleesbaar.
+  const nieuweInhoud = `${JSON.stringify(inhoud, null, 2)}\n`;
   const { tak, bestond } = await startTak(slug, pad, nieuweInhoud);
   const commit = bestond ? "" : await gh.schrijfBestand(pad, nieuweInhoud, tak, `${slug}: tekst gewijzigd${toelichting ? ` (${toelichting})` : ""}`);
   const link = await wachtOpLink(tak);
@@ -155,11 +188,13 @@ export async function nieuwePagina(velden: { slug: string; titel: string; kop: s
     secties: [{ id: "inhoud", type: "tekst", achtergrond: "licht", bouwstenen: velden.bouwstenen ?? [] }],
   };
   const gekeurd = paginaSchema.safeParse(nieuw);
-  if (!gekeurd.success) throw new Error(`Dit kan niet: ${beschrijfFout(`${slug}.json`, gekeurd.error)}`);
+  if (!gekeurd.success) throw new Error(inGewoneTaal(gekeurd.error));
   await controleerBeelden(gekeurd.data, gh.publicatietak());
 
   const pad = veiligPad(`content/paginas/${slug}.json`);
-  const nieuweInhoud = `${JSON.stringify(gekeurd.data, null, 2)}\n`;
+  // Om dezelfde reden: een nieuwe pagina komt er zo uit te zien als de pagina's die met de hand
+  // geschreven zijn, niet als een schema-afdruk.
+  const nieuweInhoud = `${JSON.stringify(nieuw, null, 2)}\n`;
   const { tak, bestond } = await startTak(slug, pad, nieuweInhoud);
   const commit = bestond ? "" : await gh.schrijfBestand(pad, nieuweInhoud, tak, `nieuwe pagina: ${slug}`);
   const link = await wachtOpLink(tak);

@@ -20,7 +20,7 @@ const tellers = new Map<string, number[]>();
 export type Tempo = { mag: true } | { mag: false; wachtSeconden: number };
 
 export function tempoControle(sleutelRuw: string): Tempo {
-  // Nooit het token zelf als sleutel bewaren; een hash is genoeg om te tellen.
+  // Nooit het token zelf bewaren; een hash is genoeg om te tellen.
   const sleutel = createHash("sha256").update(sleutelRuw).digest("hex").slice(0, 16);
   const nu = Date.now();
   const tijden = (tellers.get(sleutel) ?? []).filter((t) => nu - t < VENSTER_MS);

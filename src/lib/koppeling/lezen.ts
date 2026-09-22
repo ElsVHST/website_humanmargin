@@ -1,11 +1,30 @@
 import "server-only";
-import { leesPaginas, leesPagina, leesSite, paginaPad, siteUrl } from "@/lib/content";
-import type { Pagina, Sectie, Bouwsteen } from "@/lib/schema";
+import { paginaPad, siteUrl } from "@/lib/content";
+import { pagina as paginaSchema, site as siteSchema, type Pagina, type Sectie, type Bouwsteen } from "@/lib/schema";
+import * as gh from "@/lib/koppeling/github";
+import { veiligPad } from "@/lib/koppeling/voorstellen";
 
 /*
  * Lezen (AC-S1). Els krijgt gewone tekst terug, geen JSON: ze moet kunnen zien wat er staat en
  * hoe ze ernaar kan verwijzen, zonder iets van de opbouw te snappen.
+ *
+ * Belangrijk: dit leest de **publicatietak**, niet de bestanden van de draaiende bouw. Die twee
+ * lopen uiteen zodra er iets gepubliceerd is en de site nog niet herbouwd — en dan toont de tool
+ * een zin die ze vervolgens "niet kan vinden" als je hem wilt wijzigen. Gevonden door de
+ * beta-tester, ronde 2.
  */
+
+async function leesPaginaVanTak(slug: string): Promise<Pagina | undefined> {
+  const bestand = await gh.leesBestand(veiligPad(`content/paginas/${slug}.json`), gh.publicatietak());
+  if (!bestand) return undefined;
+  const gekeurd = paginaSchema.safeParse(JSON.parse(bestand.tekst));
+  return gekeurd.success ? gekeurd.data : undefined;
+}
+
+async function slugsVanTak(): Promise<string[]> {
+  const namen = await gh.lijstMap("content/paginas", gh.publicatietak());
+  return namen.filter((n) => n.endsWith(".json")).map((n) => n.replace(/\.json$/, ""));
+}
 
 /** Het adres waar de gepubliceerde versie te zien is (de "demo" in PRD-002 §5.1). */
 export function publicatieAdres(): string {
@@ -68,11 +87,13 @@ function kopVan(p: Pagina): string {
   return p.titel.split("|")[0].trim();
 }
 
-export function siteOverzicht(): string {
-  const site = leesSite();
-  const paginas = leesPaginas();
+export async function siteOverzicht(): Promise<string> {
+  const siteBestand = await gh.leesBestand(veiligPad("content/site.json"), gh.publicatietak());
+  const site = siteBestand ? siteSchema.parse(JSON.parse(siteBestand.tekst)) : null;
+  const slugs = await slugsVanTak();
+  const paginas = (await Promise.all(slugs.map((s) => leesPaginaVanTak(s)))).filter((p): p is Pagina => Boolean(p));
   const regels = [
-    `De site van ${site.naam}. Gepubliceerd te zien op: ${publicatieAdres()}`,
+    `De site van ${site?.naam ?? "Human Margin"}. Gepubliceerd te zien op: ${publicatieAdres()}`,
     "",
     `${paginas.length} pagina's:`,
     ...paginas.map((p) => `- ${p.slug} (${paginaPad(p.slug)}) — ${kopVan(p)}; secties: ${p.secties.map((s) => s.id).join(", ")}`),
@@ -85,12 +106,10 @@ export function siteOverzicht(): string {
   return regels.join("\n");
 }
 
-export function paginaOverzicht(slug: string): string {
-  const p: Pagina | undefined = leesPagina(slug);
+export async function paginaOverzicht(slug: string): Promise<string> {
+  const p = await leesPaginaVanTak(slug);
   if (!p) {
-    const namen = leesPaginas()
-      .map((x) => x.slug)
-      .join(", ");
+    const namen = (await slugsVanTak()).join(", ");
     return `Die pagina ken ik niet. Dit zijn de pagina's: ${namen}.`;
   }
   return [`Pagina "${p.slug}" — ${kopVan(p)}`, `Adres: ${paginaPad(p.slug)}`, `Titel in de browser: ${p.titel}`, `Beschrijving: ${p.beschrijving}`, ...p.secties.flatMap(tekstUitSectie)].join("\n");

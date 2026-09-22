@@ -34,17 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    ".next-k3/types/**/*.ts",
-    ".next-k3/dev/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-manifest/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-manifest/dev/types/**/*.ts",
-    ".next-vb-eerste-versie/types/**/*.ts",
-    ".next-vb-eerste-versie/dev/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-proef-controlereeks/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-proef-controlereeks/dev/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-proef-script/types/**/*.ts",
-    ".next-vb-voorstel-2026-09-22-proef-script/dev/types/**/*.ts"
+    "**/*.mts"
   ],
   "exclude": [
     "node_modules"

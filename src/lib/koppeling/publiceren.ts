@@ -43,11 +43,17 @@ export async function geschiedenis(hoeveel = 20): Promise<Publicatie[]> {
   return gh.commits(gh.publicatietak(), hoeveel);
 }
 
-/** Draai de laatste publicatie terug, of een publicatie naar keuze. */
+/**
+ * Draai de laatste wijziging terug, of een wijziging naar keuze.
+ *
+ * Zonder code pakt hij gewoon de bovenste: ook als dat zelf een terugdraaiing is. De vorige versie
+ * sloeg terugdraaiingen over, en dan draaide een tweede "toch maar niet" steeds dezelfde publicatie
+ * opnieuw terug — Els kwam er niet meer uit. Gevonden door de beta-tester, ronde 2.
+ */
 export async function draaiTerug(shaRuw?: string): Promise<{ commit: string; teruggedraaid: string; adres: string }> {
   const lijst = await geschiedenis(30);
   if (lijst.length < 2) throw new Error("Er valt nog niets terug te draaien.");
-  const sha = String(shaRuw ?? "").trim() || lijst.find((c) => !c.boodschap.startsWith("terugdraaien"))?.sha || lijst[0].sha;
+  const sha = String(shaRuw ?? "").trim() || lijst[0].sha;
   if (!/^[0-9a-f]{7,40}$/i.test(sha)) throw new Error("Die publicatie ken ik niet.");
 
   const details = await gh.commitDetails(sha);
@@ -58,6 +64,11 @@ export async function draaiTerug(shaRuw?: string): Promise<{ commit: string; ter
   const tak = gh.publicatietak();
   let laatste = "";
   const namen: string[] = [];
+  // Zonder gewijzigde bestanden valt er niets terug te draaien. De vorige versie liep de lus dan
+  // nul keer en meldde tóch "Teruggedraaid" — precies het vangnet waar Els op vertrouwt.
+  if (details.bestanden.length === 0) {
+    throw new Error("Bij die wijziging is niets veranderd, dus er valt ook niets terug te draaien.");
+  }
   for (const bestand of details.bestanden) {
     const pad = veiligPad(bestand);
     const vorige = await gh.leesBestand(pad, ouder);
@@ -66,5 +77,6 @@ export async function draaiTerug(shaRuw?: string): Promise<{ commit: string; ter
       ? await gh.schrijfBestand(pad, vorige.tekst, tak, `terugdraaien van ${sha.slice(0, 7)}: ${pad}`)
       : await gh.verwijderBestand(pad, tak, `terugdraaien van ${sha.slice(0, 7)}: ${pad} weg`);
   }
+  if (!laatste) throw new Error("Er is niets veranderd; ik heb niets teruggedraaid.");
   return { commit: laatste, teruggedraaid: namen.join(", "), adres: publicatieAdres() };
 }

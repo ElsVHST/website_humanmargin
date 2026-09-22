@@ -39,7 +39,7 @@ const handler = createMcpHandler(
         inputSchema: {},
         annotations: { readOnlyHint: true, title: "Bekijk de site" },
       },
-      async () => tekst(siteOverzicht()),
+      async () => tekst(await siteOverzicht()),
     );
 
     server.registerTool(
@@ -49,7 +49,7 @@ const handler = createMcpHandler(
         inputSchema: { slug: z.string().describe("de naam van de pagina, bijvoorbeeld 'aanbod' of 'home'") },
         annotations: { readOnlyHint: true, title: "Bekijk een pagina" },
       },
-      async ({ slug }: { slug: string }) => tekst(paginaOverzicht(String(slug).trim().toLowerCase())),
+      async ({ slug }: { slug: string }) => tekst(await paginaOverzicht(String(slug).trim().toLowerCase())),
     );
 
     server.registerTool(
@@ -61,7 +61,7 @@ const handler = createMcpHandler(
           pagina: z.string().describe("de naam van de pagina, bijvoorbeeld 'aanbod'"),
           wijzigingen: z
             .array(z.object({ zoek: z.string().describe("de tekst die er nu staat"), vervang: z.string().describe("de tekst die er moet komen") }))
-            .min(1),
+            .min(1, { error: "Zeg erbij welke tekst er nu staat en wat ervoor in de plaats moet." }),
           toelichting: z.string().optional().describe("in één zin waarom, voor in de geschiedenis"),
         },
         annotations: { title: "Stel een wijziging voor", destructiveHint: false },
@@ -223,7 +223,10 @@ const beveiligd = withMcpAuth(handler, controleer, {
  * token is ruim voor iemand die zijn site aanpast; daarboven is het een lus of een poging.
  */
 async function metRem(request: Request): Promise<Response> {
-  const token = request.headers.get("authorization") ?? "anoniem";
+  // Op het token tellen, niet op de hele kop: "bearer x" en "BEARER x" zijn hetzelfde token en
+  // hoorden in dezelfde emmer. Gevonden door de beta-tester, ronde 2.
+  const kopRuw = request.headers.get("authorization") ?? "";
+  const token = kopRuw.replace(/^bearer\s+/i, "").trim() || "anoniem";
   const oordeel = tempoControle(token);
   if (!oordeel.mag) {
     return Response.json(
@@ -235,7 +238,19 @@ async function metRem(request: Request): Promise<Response> {
    * Een 401 hoort te zeggen wat er aan de hand is. De standaardtekst is altijd "No authorization
    * provided", ook bij een verlopen token — en dan zoekt Els in de verkeerde hoek.
    */
-  const kop = request.headers.get("authorization");
+  const kop = kopRuw || null;
+  if (!kop) {
+    const uitleg = "Log eerst in vanuit ChatGPT; deze site vraagt om een aanmelding.";
+    return Response.json(
+      { error: "invalid_token", error_description: uitleg },
+      {
+        status: 401,
+        headers: {
+          "www-authenticate": `Bearer error="invalid_token", error_description="${uitleg}", resource_metadata="${publiekeBasis(request)}/.well-known/oauth-protected-resource"`,
+        },
+      },
+    );
+  }
   if (kop && !isTesttoken(kop.replace(/^Bearer /i, ""))) {
     const oordeel = leesToken(kop.replace(/^Bearer /i, ""), mcpAdres(publiekeBasis(request)));
     if (!oordeel.geldig) {

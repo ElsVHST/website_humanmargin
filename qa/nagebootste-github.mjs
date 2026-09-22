@@ -230,6 +230,12 @@ const server = createServer(async (req, res) => {
       return res.end(inhoud);
     }
 
+    /* Een omleiding, om te toetsen of de fotokant elke stap opnieuw keurt. */
+    if (pad === "/omleiding") {
+      res.writeHead(302, { location: url.searchParams.get("naar") ?? "/" });
+      return res.end();
+    }
+
     const m = /^\/repos\/([^/]+)\/([^/]+)(\/.*)?$/.exec(pad);
     if (!m) return json(res, 404, { message: "onbekend adres" });
     const rest = m[3] ?? "";
@@ -272,6 +278,16 @@ const server = createServer(async (req, res) => {
       const bestandspad = r[1];
       if (req.method === "GET") {
         const ref = url.searchParams.get("ref") ?? TAK;
+        // Een map geeft een lijst terug, net als bij de echte contents-API.
+        try {
+          const soort = git(["cat-file", "-t", `${ref}:${bestandspad}`]);
+          if (soort === "tree") {
+            const regels = git(["ls-tree", "--name-only", `${ref}:${bestandspad}`]).split("\n").filter(Boolean);
+            return json(res, 200, regels.map((naam) => ({ name: naam, path: `${bestandspad}/${naam}`, type: naam.includes(".") ? "file" : "dir" })));
+          }
+        } catch {
+          /* bestaat niet: hieronder afgehandeld */
+        }
         const inhoud = leesBestand(ref, bestandspad);
         if (!inhoud) return json(res, 404, { message: "Not Found" });
         const sha = execFileSync("git", ["--git-dir", REPO, "rev-parse", `${ref}:${bestandspad}`], { encoding: "utf8" }).trim();

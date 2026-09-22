@@ -38,7 +38,19 @@ export function publiekeBasis(request: Request): string {
   const koppen = request.headers;
   const host = koppen.get("x-forwarded-host") ?? koppen.get("host");
   if (host) {
-    const naam = host.split(":")[0];
+    /*
+     * De hostnaam uit de kop halen met een echte URL-ontleding, niet met een knip op de dubbele
+     * punt: `localhost:4831@kwaadaardig.example.com` levert met een knip "localhost" op, terwijl de
+     * echte host daar `kwaadaardig.example.com` is. Gevonden door de beta-tester, ronde 2.
+     */
+    let naam: string;
+    try {
+      const ontleed = new URL(`http://${host}`);
+      if (ontleed.username || ontleed.password || host.includes("@")) return siteUrl();
+      naam = ontleed.hostname;
+    } catch {
+      return siteUrl();
+    }
     const bekend = eigenHosts();
     // Een onbekende host is geen fout van de client maar een poging tot omleiden: dan geldt het
     // adres dat bij de bouw is meegegeven.

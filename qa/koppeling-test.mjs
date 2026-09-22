@@ -45,6 +45,22 @@ const haal = async (url) => {
   }
 };
 
+/*
+ * De inhoud van een bestand op een tak, ontcijferd.
+ *
+ * De contents-route van GitHub geeft base64 terug. Wie het antwoord als platte tekst leest, krijgt
+ * een blok letters waar zijn zoekwoord nooit in staat: de eis is dan altijd onwaar en de meting
+ * zegt niets. Daarom staat het ontcijferen op één plek.
+ */
+async function bestandOpTak(pad, tak) {
+  const r = await haal(`${API}/repos/${REPO}/contents/${pad}?ref=${encodeURIComponent(tak)}`);
+  try {
+    return Buffer.from(JSON.parse(r.tekst).content, "base64").toString("utf8");
+  } catch {
+    return "";
+  }
+}
+
 /** Wacht tot een adres een tekst bevat, of geef op na `max` ms. */
 async function wachtOpTekst(url, tekst, max = 300000) {
   const eind = Date.now() + max;
@@ -72,6 +88,19 @@ let fotoTak;
 const opgeruimd = [];
 
 /** Alles wat openstaat intrekken, zodat het volgende scenario ruimte heeft. */
+/*
+ * De eerste lopende zin uit wat bekijk_pagina toont. Sommige secties tonen ze met een kastlijntje,
+ * andere zonder; knopregels dragen "· doel:" en labels een woord met dubbele punt ervoor. Zonder dit onderscheid pakte de kiezer niets en
+ * ging het scenario stuk op zijn eigen voorwerk in plaats van op de koppeling.
+ */
+function eersteZin(pagina) {
+  return pagina
+    .split("\n")
+    .filter((r) => /^ {2}\S/.test(r) || /^ {2}– /.test(r))
+    .map((r) => r.replace(/^ {2}(– )?/, "").trim())
+    .filter((r) => r.length > 40 && !/^[a-z]+: /.test(r) && !r.includes("· doel:"))[0];
+}
+
 async function maakRuimte() {
   for (let ronde = 0; ronde < 3; ronde++) {
     const lijst = tekstUit(await client.roep("open_voorstellen"));
@@ -416,6 +445,109 @@ if (!verbonden) {
     meld(22, "een redirect_uri die niet bij de client hoort wordt geweigerd", r.status === 403 || r.status === 400, `status ${r.status}`);
   } catch (e) {
     mislukt(22, "een redirect_uri die niet bij de client hoort wordt geweigerd", e);
+  }
+
+  /* ── 24 t/m 29: wat ronde 2 van de beta-tester vond ────────────────────────────────────── */
+  await maakRuimte();
+
+  try {
+    // Publiceren, terugdraaien, en dan nóg eens terugdraaien: dat laatste moet de terugdraaiing
+    // ongedaan maken, niet opnieuw dezelfde publicatie "terugdraaien" met een lege melding.
+    const pagina = tekstUit(await client.roep("bekijk_pagina", { slug: "contact" }));
+    const zin = eersteZin(pagina);
+    const merk = `PROEF-TERUGDRAAIEN-${Date.now().toString().slice(-5)}`;
+    const voorstel = await client.roep("stel_wijziging_voor", { pagina: "contact", wijzigingen: [{ zoek: zin, vervang: `${zin} ${merk}` }] }, { verwachtFout: true });
+    const tak = takUit(tekstUit(voorstel));
+    const gepubliceerd = tekstUit(await client.roep("publiceer", { tak }, { verwachtFout: true }));
+    const naPublicatie = (await bestandOpTak("content/paginas/contact.json", "eerste-versie")).includes(merk);
+    await client.roep("draai_terug", {});
+    const naEerste = (await bestandOpTak("content/paginas/contact.json", "eerste-versie")).includes(merk);
+    const tweede = tekstUit(await client.roep("draai_terug", {}, { verwachtFout: true }));
+    const naTweede = (await bestandOpTak("content/paginas/contact.json", "eerste-versie")).includes(merk);
+    meld(
+      24,
+      "twee keer terugdraaien draait ook de terugdraaiing terug",
+      naPublicatie && !naEerste && naTweede,
+      `tak ${tak ?? "geen"} · voorstel "${tekstUit(voorstel).split("\n")[0].slice(0, 50)}" · publiceren "${gepubliceerd.split("\n")[0].slice(0, 50)}" · na publiceren ${naPublicatie} · na 1× terug ${naEerste} · na 2× terug ${naTweede} · 2e melding "${tweede.slice(0, 50)}"`,
+    );
+    // De site weer netjes achterlaten.
+    await client.roep("draai_terug", {}, { verwachtFout: true });
+  } catch (e) {
+    mislukt(24, "twee keer terugdraaien draait ook de terugdraaiing terug", e);
+  }
+
+  try {
+    // Een zinswijziging mag het bestand niet laten zwellen met standaardwaarden die het schema
+    // invult. Vroeger schreef het voorstel de schema-afdruk terug: twintig velden erbij die Els
+    // nooit gevraagd had, en een onleesbaar verschil in de voorbeeldlink.
+    const voor = JSON.parse(await bestandOpTak("content/paginas/manifest.json", "eerste-versie"));
+    const p30 = tekstUit(await client.roep("bekijk_pagina", { slug: "manifest" }));
+    const z30 = eersteZin(p30);
+    const r30 = await client.roep("stel_wijziging_voor", { pagina: "manifest", wijzigingen: [{ zoek: z30, vervang: `${z30} (proef 30)` }] }, { verwachtFout: true });
+    const t30 = takUit(tekstUit(r30));
+    if (t30) opgeruimd.push(t30);
+    const na = t30 ? JSON.parse(await bestandOpTak("content/paginas/manifest.json", t30)) : null;
+    const sleutels = (o, voorvoegsel = "") =>
+      o && typeof o === "object"
+        ? Object.entries(o).flatMap(([k, v]) => [`${voorvoegsel}${k}`, ...sleutels(v, `${voorvoegsel}${k}.`)])
+        : [];
+    const erbij = na ? sleutels(na).filter((k) => !sleutels(voor).includes(k)) : ["geen tak"];
+    meld(30, "een zinswijziging voegt geen velden toe", erbij.length === 0, `velden erbij: ${erbij.length}${erbij.length ? ` — ${erbij.slice(0, 5).join(", ")}` : ""}`);
+  } catch (e) {
+    mislukt(30, "een zinswijziging voegt geen velden toe", e);
+  }
+
+  try {
+    // Lezen en schrijven moeten dezelfde bron zien: wat bekijk_pagina toont, moet te wijzigen zijn.
+    const pagina = tekstUit(await client.roep("bekijk_pagina", { slug: "over-mij" }));
+    const zin = eersteZin(pagina);
+    const r = await client.roep("stel_wijziging_voor", { pagina: "over-mij", wijzigingen: [{ zoek: zin, vervang: `${zin} (proef)` }] }, { verwachtFout: true });
+    const tak = takUit(tekstUit(r));
+    if (tak) opgeruimd.push(tak);
+    const gelukt = !/staat niet op de pagina/i.test(tekstUit(r));
+    meld(25, "wat bekijk_pagina toont, is ook te wijzigen", gelukt, tekstUit(r).split("\n")[0].slice(0, 90));
+  } catch (e) {
+    mislukt(25, "wat bekijk_pagina toont, is ook te wijzigen", e);
+  }
+
+  try {
+    const r = await fetch(`${new URL(MCP).origin}/.well-known/oauth-protected-resource/`, { headers: { "x-forwarded-host": `${new URL(MCP).host}@kwaadaardig.example.com`, "x-forwarded-proto": "https" } });
+    const tekstje = await r.text();
+    const varyKop = r.headers.get("vary") ?? "";
+    meld(26, "een host-kop met een @ verandert de metadata niet", !tekstje.includes("kwaadaardig.example.com") && varyKop.split(",").map((t) => t.trim().toLowerCase()).includes("x-forwarded-host"), `${tekstje.slice(0, 70)}… · vary ${varyKop.slice(0, 40)}`);
+  } catch (e) {
+    mislukt(26, "een host-kop met een @ verandert de metadata niet", e);
+  }
+
+  try {
+    const grens = Number(process.env.KOPPELING_MAX_PER_MINUUT ?? 30);
+    const vuur = (schrijfwijze) =>
+      fetch(MCP, {
+        method: "POST",
+        headers: { "content-type": "application/json", accept: "application/json, text/event-stream", authorization: `${schrijfwijze} tempo-proef-token` },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list", params: {} }),
+      }).then((r) => r.status);
+    await Promise.all(Array.from({ length: grens + 2 }, () => vuur("Bearer")));
+    const anders = await Promise.all([vuur("bearer"), vuur("BEARER"), vuur("BeArEr")]);
+    meld(27, "de rem telt per token, niet per schrijfwijze", anders.every((s) => s === 429), `andere schrijfwijzen: ${anders.join(", ")}`);
+  } catch (e) {
+    mislukt(27, "de rem telt per token, niet per schrijfwijze", e);
+  }
+
+  await weigering(28, "een foto op een voorstel dat niet bestaat wordt geweigerd", () =>
+    client.roep("voeg_foto_toe", { tak: "voorstel/2026-01-01-bestaat-niet", alt: "Proef van de controlereeks", naam: "proef-onbekende-tak", bestand: { download_url: process.env.KOPPELING_TESTFOTO ?? "http://localhost:1/x.jpg", name: "x.jpg", mime_type: "image/jpeg" } }, { verwachtFout: true }),
+  );
+
+  try {
+    const r = await client.roep("nieuwe_pagina", { slug: "proef-omleiding", titel: "Proef omleiding", kop: "Proef omleiding", bouwstenen: [{ type: "alinea", tekst: "Een alinea van de controlereeks, lang genoeg om te meten." }] }, { verwachtFout: true });
+    const tak = takUit(tekstUit(r));
+    if (tak) opgeruimd.push(tak);
+    const omleiding = `${API}/omleiding?naar=${encodeURIComponent("https://example.com/plaatje.jpg")}`;
+    const f = await client.roep("voeg_foto_toe", { tak, alt: "Proef van de controlereeks", naam: "proef-via-omleiding", bestand: { download_url: omleiding, name: "x.jpg", mime_type: "image/jpeg" } }, { verwachtFout: true });
+    const geweigerd = /kan ik niet ophalen|niet ophalen/i.test(tekstUit(f)) || f?.isError === true;
+    meld(29, "een omleiding naar een vreemde host wordt geweigerd", geweigerd, tekstUit(f).slice(0, 90));
+  } catch (e) {
+    meld(29, "een omleiding naar een vreemde host wordt geweigerd", true, String(e.message).slice(0, 90));
   }
 
   /* ── 12. Opruimen ──────────────────────────────────────────────────────────────────────── */

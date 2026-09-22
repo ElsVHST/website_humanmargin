@@ -127,7 +127,7 @@ toegang beheert in `docs/BEHEER-KOPPELING.md`. De koppeling raakt alleen `conten
 `public/media/**`, schrijft alleen naar de tak uit `PUBLICATIETAK`, en laat `main` met rust.
 
 - `npm run qa` test de grenzen zonder netwerk (`qa/koppeling-unit.mjs`).
-- `node qa/koppeling-test.mjs --mcp <adres>` draait veertien scenario's end-to-end.
+- `node qa/koppeling-test.mjs --mcp <adres>` draait eenendertig scenario's end-to-end.
 - `node qa/nagebootste-github.mjs` speelt GitHub en Vercel na, met een echte lokale repo, zodat dat
   kan zonder één commit naar GitHub te sturen.
 

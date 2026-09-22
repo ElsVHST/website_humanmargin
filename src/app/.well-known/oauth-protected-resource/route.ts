@@ -17,7 +17,15 @@ export function GET(request: Request) {
       resource_documentation: `${basis}/`,
       scopes_supported: ["site:lezen", "site:voorstellen", "site:publiceren"],
     },
-    { headers: { "cache-control": "public, max-age=300", "access-control-allow-origin": "*" } },
+    {
+      headers: {
+        "cache-control": "public, max-age=300",
+        // Het antwoord hangt af van de host-kop; zonder dit kan een gedeelde cache het antwoord
+        // van de één aan de ander geven.
+        vary: "x-forwarded-host, host",
+        "access-control-allow-origin": "*",
+      },
+    },
   );
 }
 
